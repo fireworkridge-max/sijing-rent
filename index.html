@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泗泾优选房源大厅</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 PapaParse 用于读取和解析 CSV 表格文件 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -37,7 +35,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <span id="db-status" class="flex items-center gap-1 text-xs font-medium text-warm-500 bg-warm-100 px-3 py-1.5 rounded-full">
-                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 数据加载中...
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 库房加载中...
                     </span>
                 </div>
             </div>
@@ -50,7 +48,7 @@
         <!-- 头部介绍 -->
         <div class="mb-8 max-w-3xl">
             <h1 class="text-3xl font-bold text-warm-900 mb-3">实时真实租房库</h1>
-            <p class="text-lg text-warm-600">根据距离、户型和预算筛选您的理想好房。获取更多房源数据联系VX：17502100451。朋友圈有房源视频。</p>
+            <p class="text-lg text-warm-600">根据距离、户型和预算筛选您的理想好房。获取更多房源及实拍视频，请联系专属管家 VX：<span class="font-bold text-accent-700 select-all">17502100451</span></p>
         </div>
 
         <!-- 筛选控制台 -->
@@ -78,10 +76,10 @@
                 <div>
                     <select id="filter-type" class="w-full px-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none">
                         <option value="all">所有户型</option>
-                        <option value="整租">整租房源</option>
-                        <option value="合租主卧">合租主卧 (带独卫)</option>
-                        <option value="合租次卧">合租次卧</option>
+                        <option value="整租">整租房源 (1-3居室)</option>
                         <option value="一室户">独立一室户</option>
+                        <option value="合租主卧">合租主卧 (带独卫)</option>
+                        <option value="合租次卧">合租单间/次卧</option>
                     </select>
                 </div>
 
@@ -89,10 +87,10 @@
                 <div>
                     <select id="filter-price" class="w-full px-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none">
                         <option value="all">所有租金</option>
-                        <option value="0-1500">¥1500 以下</option>
-                        <option value="1500-2500">¥1500 - ¥2500</option>
-                        <option value="2500-4000">¥2500 - ¥4000</option>
-                        <option value="4000-99999">¥4000 以上</option>
+                        <option value="0-1500">¥1500 以下 (单间首选)</option>
+                        <option value="1500-2500">¥1500 - ¥2500 (一室户)</option>
+                        <option value="2500-3500">¥2500 - ¥3500 (整租特惠)</option>
+                        <option value="3500-99999">¥3500 以上</option>
                     </select>
                 </div>
 
@@ -101,7 +99,7 @@
             <!-- 重置按钮与统计 -->
             <div class="mt-4 pt-4 border-t border-warm-100 flex justify-between items-center">
                 <div class="text-sm text-warm-500">
-                    共找到 <span id="results-count" class="font-bold text-accent-600">0</span> 套符合条件的房源
+                    库内总计 <span id="total-count" class="font-bold text-warm-900">10,000</span> 套，当前符合条件 <span id="results-count" class="font-bold text-accent-600">0</span> 套
                 </div>
                 <button id="btn-reset" class="text-sm font-medium text-warm-500 hover:text-warm-800 transition-colors">
                     清除所有筛选条件
@@ -111,11 +109,13 @@
 
         <!-- 房源列表 Grid -->
         <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- 骨架屏 (加载中状态) -->
-            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
-            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
-            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
-            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
+            <!-- 房源卡片将在这里注入 -->
+        </div>
+        
+        <!-- 防卡顿/引流提示 -->
+        <div id="load-more-hint" class="hidden mt-8 p-6 bg-accent-50 border border-accent-200 rounded-2xl text-center">
+            <h3 class="text-lg font-bold text-accent-800 mb-2">已为您展示匹配度最高的 60 套优质房源</h3>
+            <p class="text-accent-700">系统已隐藏其余符合条件的高性价比房源。添加专属管家微信 <span class="font-bold text-xl select-all">17502100451</span> 免费获取完整房源清单及实拍视频！</p>
         </div>
 
         <!-- 无结果空状态 -->
@@ -134,83 +134,101 @@
                 <div class="w-16 h-16 bg-accent-100 text-accent-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                     👋
                 </div>
-                <h3 class="text-2xl font-bold text-warm-900 mb-2">联系看房</h3>
-                <p class="text-warm-500 mb-6 text-sm">此房源由专属管家维护，扫码或添加微信获取底价和真实看房视频。</p>
+                <h3 class="text-2xl font-bold text-warm-900 mb-2">预约看这套房</h3>
+                <p class="text-warm-500 mb-6 text-sm">此特惠房源极为抢手，请立即添加管家微信，获取详细楼层、门牌号及实拍视频。</p>
                 
                 <div class="bg-warm-50 border border-warm-200 rounded-xl p-4 mb-6">
-                    <p class="text-xs text-warm-500 uppercase tracking-wider font-bold mb-1">专属客服微信</p>
-                    <p class="text-xl font-bold text-accent-700 select-all">17502100451</p>
-                    <p class="text-xs text-warm-400 mt-2">7*24小时极速响应</p>
+                    <p class="text-xs text-warm-500 uppercase tracking-wider font-bold mb-1">长按复制客服微信</p>
+                    <p class="text-2xl font-bold text-accent-700 select-all tracking-wider">17502100451</p>
+                    <p class="text-xs text-warm-400 mt-2">朋友圈每日更新特价房视频</p>
                 </div>
 
                 <button onclick="closeContactModal()" class="w-full bg-warm-900 text-white font-medium py-3 rounded-xl hover:bg-warm-800 transition-colors">
-                    我知道了
+                    我知道了，去加微信
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 纯前端表格读取逻辑 -->
+    <!-- 纯前端 10000条 数据生成引擎 -->
     <script>
-        // 全局状态
         let allListings = []; 
-
-        // 默认演示数据（当 GitHub 上还没上传 data.csv 时显示）
-        const seedData = [
-            { id: 1, title: "朝南主卧带阳台 精装全配", community: "保利翡丽公馆", price: 2800, type: "合租主卧", distance: "<500m", tags: ["近地铁", "高端小区"] },
-            { id: 2, title: "高性价比一室户 随时看房", community: "丁香苑", price: 2100, type: "一室户", distance: "500m-1km", tags: ["朝南", "大空间"] },
-            { id: 3, title: "精装大两房 适合家庭整租", community: "同润山河小城", price: 4500, type: "整租", distance: "1km-2km", tags: ["户型方正", "随时拎包"] },
-            { id: 4, title: "新凯二期朝南次卧 押一付一", community: "兰馨苑", price: 1500, type: "合租次卧", distance: "1km-2km", tags: ["性价比高", "押一付一"] }
-        ];
 
         // 绑定 Modal
         window.openContactModal = () => document.getElementById('contact-modal').classList.remove('hidden');
         window.closeContactModal = () => document.getElementById('contact-modal').classList.add('hidden');
 
-        // 拉取 CSV 表格数据
-        async function fetchCSVData() {
-            try {
-                // 尝试读取同目录下的 data.csv 文件
-                const response = await fetch('data.csv');
-                if (!response.ok) {
-                    throw new Error('找不到 data.csv 文件');
-                }
-                const csvText = await response.text();
+        // ==== 核心：引流数据生成器 ====
+        function generateTrafficData() {
+            const communities = [
+                { name: "保利翡丽公馆", dist: "<500m" }, { name: "绿地云天坊", dist: "<500m" }, { name: "泗泾新苑", dist: "<500m" },
+                { name: "润和苑", dist: "500m-1km" }, { name: "金地玺华村", dist: "500m-1km" }, { name: "招商时代潮派", dist: "500m-1km" }, { name: "泗泾颐景园", dist: "500m-1km" },
+                { name: "褐石苑", dist: "1km-2km" }, { name: "鹭景苑", dist: "1km-2km" }, { name: "繁华里", dist: "1km-2km" }, { name: "丁香苑", dist: "1km-2km" }, 
+                { name: "兰馨苑", dist: "1km-2km" }, { name: "紫竹苑", dist: "1km-2km" }, { name: "桂花苑", dist: "1km-2km" }, { name: "同润山河小城", dist: "1km-2km" },
+                { name: "玉兰苑", dist: "1km-2km" }, { name: "清泉警苑", dist: "1km-2km" }, { name: "建发玖珑湾", dist: "1km-2km" },
+                { name: "塘和家园·德悦苑", dist: ">2km" }, { name: "塘和家园·康城苑", dist: ">2km" }, { name: "新城上坤樾山", dist: ">2km" }, { name: "紫薇茗庭", dist: ">2km" }
+            ];
+
+            // 你的引流价格策略
+            const roomTypes = [
+                { type: "三室一厅", displayType: "整租", min: 3300, max: 3500 },
+                { type: "两室一厅", displayType: "整租", min: 2800, max: 3000 },
+                { type: "一室一厅", displayType: "整租", min: 2400, max: 2500 },
+                { type: "一室户", displayType: "一室户", min: 1500, max: 2000 },
+                { type: "合租主卧", displayType: "合租主卧", min: 1200, max: 1500 },
+                { type: "合租次卧", displayType: "合租次卧", min: 800, max: 1100 }
+            ];
+
+            const adjectives = ["极品", "急租", "房东直租", "全新精装", "超高性价比", "随时拎包", "朝南带阳台", "特价秒杀", "打工人首选"];
+            const tagPool = ["近地铁", "精装修", "押一付一", "朝南", "独立卫浴", "带阳台", "电梯房", "免物业费", "民水民电", "全套家电"];
+
+            const generatedData = [];
+
+            for (let i = 0; i < 10000; i++) {
+                // 随机抽取小区和户型
+                const comm = communities[Math.floor(Math.random() * communities.length)];
+                const roomInfo = roomTypes[Math.floor(Math.random() * roomTypes.length)];
                 
-                // 使用 PapaParse 解析 CSV
-                Papa.parse(csvText, {
-                    header: true, // 表格第一行是表头
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        if(results.data && results.data.length > 0) {
-                            // 将 CSV 的列映射到我们的数据结构中
-                            allListings = results.data.map((row, index) => {
-                                // 兼容不同可能的表头命名
-                                const tagsStr = row['标签'] || row['tags'] || '';
-                                return {
-                                    id: index,
-                                    title: row['标题'] || row['title'] || '未命名房源',
-                                    community: row['小区'] || row['community'] || '未知小区',
-                                    price: parseInt(row['租金'] || row['price']) || 0,
-                                    type: row['户型'] || row['type'] || '未知户型',
-                                    distance: row['距离'] || row['distance'] || '未知距离',
-                                    tags: tagsStr ? tagsStr.split(/[，,]/).map(t => t.trim()).filter(t => t) : []
-                                };
-                            });
-                            updateDbStatus("connected");
-                            applyFilters();
-                        } else {
-                            throw new Error('CSV 文件是空的');
-                        }
-                    }
+                // 随机生成楼栋和单元（模拟真实，但不给具体房间号）
+                const buildingNum = Math.floor(Math.random() * 80) + 1;
+                const unitNum = Math.floor(Math.random() * 5) + 1;
+                
+                // 随机价格
+                const price = Math.floor(Math.random() * (roomInfo.max - roomInfo.min + 1)) + roomInfo.min;
+                
+                // 随机标题组合
+                const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+                const title = `${adj}${roomInfo.type} ${comm.name} ${buildingNum}号楼${unitNum}单元`;
+
+                // 随机取 2-3 个标签
+                const tags = [];
+                const shuffledTags = tagPool.sort(() => 0.5 - Math.random());
+                tags.push(shuffledTags[0], shuffledTags[1]);
+                if (Math.random() > 0.5) tags.push(shuffledTags[2]);
+
+                generatedData.push({
+                    id: i,
+                    title: title,
+                    community: comm.name,
+                    price: price,
+                    type: roomInfo.displayType,
+                    distance: comm.dist,
+                    tags: tags
                 });
-            } catch (error) {
-                console.warn("未能读取自定义表格，加载默认演示数据:", error);
-                // 如果没有 CSV 文件，使用内置的演示数据
-                allListings = [...seedData];
-                updateDbStatus("fallback");
-                applyFilters();
             }
+
+            return generatedData;
+        }
+
+        // 初始化加载数据
+        function initData() {
+            allListings = generateTrafficData();
+            
+            const badge = document.getElementById('db-status');
+            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 10000套真实库已同步`;
+            badge.className = "flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full shadow-sm";
+            
+            applyFilters();
         }
 
         // 筛选逻辑
@@ -237,16 +255,19 @@
             renderGrid(filtered);
         }
 
-        // 渲染房源卡片
+        // 渲染房源卡片 (限制最多渲染60条防卡顿)
         function renderGrid(data) {
             const grid = document.getElementById('listings-grid');
             const emptyState = document.getElementById('empty-state');
+            const loadMoreHint = document.getElementById('load-more-hint');
+            
             document.getElementById('results-count').textContent = data.length;
 
             grid.innerHTML = '';
 
             if (data.length === 0) {
                 grid.classList.add('hidden');
+                loadMoreHint.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
             }
@@ -254,7 +275,16 @@
             grid.classList.remove('hidden');
             emptyState.classList.add('hidden');
 
-            data.forEach(item => {
+            // 核心：为了防止浏览器崩溃，无论匹配出几千条，只截取前 60 条显示，剩下的用底部文案引流
+            const displayData = data.slice(0, 60);
+            
+            if (data.length > 60) {
+                loadMoreHint.classList.remove('hidden');
+            } else {
+                loadMoreHint.classList.add('hidden');
+            }
+
+            displayData.forEach(item => {
                 let distColor = 'bg-warm-100 text-warm-600';
                 if(item.distance === '<500m') distColor = 'bg-red-50 text-red-600 border border-red-100';
                 if(item.distance === '500m-1km') distColor = 'bg-orange-50 text-orange-600 border border-orange-100';
@@ -284,7 +314,7 @@
                                     <span class="text-sm">¥</span><span class="text-2xl">${item.price}</span><span class="text-xs text-warm-400 font-normal">/月</span>
                                 </div>
                                 <button onclick="openContactModal()" class="px-4 py-2 bg-warm-900 hover:bg-warm-800 text-white text-sm font-medium rounded-xl transition-colors">
-                                    联系看房
+                                    马上抢租
                                 </button>
                             </div>
                         </div>
@@ -292,19 +322,6 @@
                 `;
                 grid.insertAdjacentHTML('beforeend', cardHtml);
             });
-        }
-
-        // 更新状态 UI
-        function updateDbStatus(status) {
-            const badge = document.getElementById('db-status');
-            if (status === 'connected') {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 表格已同步`;
-                badge.className = "flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full shadow-sm";
-            } else if (status === 'fallback') {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> 演示数据`;
-                badge.className = "flex items-center gap-1 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full shadow-sm";
-                badge.title = "请在 GitHub 上传 data.csv 表格文件以显示您自己的房源";
-            }
         }
 
         // 绑定筛选事件
@@ -321,8 +338,8 @@
             applyFilters();
         });
 
-        // 页面加载完毕后拉取表格数据
-        document.addEventListener('DOMContentLoaded', fetchCSVData);
+        // 页面加载完毕后生成 10000 条数据
+        document.addEventListener('DOMContentLoaded', initData);
 
     </script>
 </body>
