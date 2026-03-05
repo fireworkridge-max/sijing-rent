@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>泗泾优选房源大厅</title>
+    <title>泗泾优选房源大厅 - 内部特价房</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,6 +24,21 @@
     </style>
 </head>
 <body class="antialiased font-sans flex flex-col min-h-screen">
+
+    <!-- 微信专属引导遮罩层 (防拦截利器) -->
+    <div id="wechat-mask" class="fixed inset-0 bg-gray-900/95 z-[9999] hidden flex-col items-end pt-8 pr-8 backdrop-blur-sm">
+        <div class="text-white text-6xl mb-4 animate-bounce">↗️</div>
+        <div class="text-white text-xl font-bold text-right space-y-3">
+            <p>为保证万套特价房源流畅加载</p>
+            <p>请点击右上角 <span class="text-3xl tracking-widest">···</span></p>
+            <p>选择 <span class="text-accent-400 bg-white/10 px-3 py-1 rounded-lg">在浏览器打开</span></p>
+            <p class="text-sm text-warm-300 font-normal mt-6">Safari 或 手机自带浏览器体验更佳</p>
+        </div>
+        <div class="mt-auto mb-12 w-full text-center px-8">
+            <p class="text-warm-400 text-sm mb-2">或者直接联系专属管家看房</p>
+            <p class="text-2xl font-bold text-white tracking-wider select-all">微信号: 17502100451</p>
+        </div>
+    </div>
 
     <!-- 顶部导航 -->
     <nav class="bg-white border-b border-warm-200 sticky top-0 z-50 shadow-sm">
@@ -47,8 +62,8 @@
         
         <!-- 头部介绍 -->
         <div class="mb-8 max-w-3xl">
-            <h1 class="text-3xl font-bold text-warm-900 mb-3">实时真实租房库</h1>
-            <p class="text-lg text-warm-600">根据距离、户型和预算筛选您的理想好房。获取更多房源及实拍视频，请联系专属管家 VX：<span class="font-bold text-accent-700 select-all">17502100451</span></p>
+            <h1 class="text-3xl font-bold text-warm-900 mb-3">内部特价真实租房库</h1>
+            <p class="text-lg text-warm-600">根据距离、户型和预算筛选您的理想好房。获取更多房源数据及实拍视频，请联系专属管家 VX：<span class="font-bold text-accent-700 select-all">17502100451</span></p>
         </div>
 
         <!-- 筛选控制台 -->
@@ -58,7 +73,7 @@
                 <!-- 关键词搜索 -->
                 <div class="lg:col-span-2 relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-warm-400">🔍</span>
-                    <input type="text" id="filter-search" placeholder="输入小区名称 (如: 丁香苑、保利)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50">
+                    <input type="text" id="filter-search" placeholder="输入小区名称 (如: 兰馨苑、祥和公寓)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50">
                 </div>
                 
                 <!-- 距离检索 -->
@@ -114,8 +129,8 @@
         
         <!-- 防卡顿/引流提示 -->
         <div id="load-more-hint" class="hidden mt-8 p-6 bg-accent-50 border border-accent-200 rounded-2xl text-center">
-            <h3 class="text-lg font-bold text-accent-800 mb-2">已为您展示匹配度最高的 60 套优质房源</h3>
-            <p class="text-accent-700">系统已隐藏其余符合条件的高性价比房源。添加专属管家微信 <span class="font-bold text-xl select-all">17502100451</span> 免费获取完整房源清单及实拍视频！</p>
+            <h3 class="text-lg font-bold text-accent-800 mb-2">已为您优先展示匹配度最高的 60 套热门优质房源</h3>
+            <p class="text-accent-700">系统已隐藏其余符合条件的高性价比房源。添加专属管家微信 <span class="font-bold text-xl select-all">17502100451</span> 免费获取完整房源清单及朋友圈实拍视频！</p>
         </div>
 
         <!-- 无结果空状态 -->
@@ -154,22 +169,44 @@
     <script>
         let allListings = []; 
 
+        // 检测微信环境
+        function checkWeChatEnv() {
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWeChat) {
+                // 如果在微信内打开，直接显示引导层
+                document.getElementById('wechat-mask').classList.remove('hidden');
+                document.getElementById('wechat-mask').classList.add('flex');
+            }
+        }
+
         // 绑定 Modal
         window.openContactModal = () => document.getElementById('contact-modal').classList.remove('hidden');
         window.closeContactModal = () => document.getElementById('contact-modal').classList.add('hidden');
 
         // ==== 核心：引流数据生成器 ====
         function generateTrafficData() {
-            const communities = [
-                { name: "保利翡丽公馆", dist: "<500m" }, { name: "绿地云天坊", dist: "<500m" }, { name: "泗泾新苑", dist: "<500m" },
-                { name: "润和苑", dist: "500m-1km" }, { name: "金地玺华村", dist: "500m-1km" }, { name: "招商时代潮派", dist: "500m-1km" }, { name: "泗泾颐景园", dist: "500m-1km" },
-                { name: "褐石苑", dist: "1km-2km" }, { name: "鹭景苑", dist: "1km-2km" }, { name: "繁华里", dist: "1km-2km" }, { name: "丁香苑", dist: "1km-2km" }, 
-                { name: "兰馨苑", dist: "1km-2km" }, { name: "紫竹苑", dist: "1km-2km" }, { name: "桂花苑", dist: "1km-2km" }, { name: "同润山河小城", dist: "1km-2km" },
-                { name: "玉兰苑", dist: "1km-2km" }, { name: "清泉警苑", dist: "1km-2km" }, { name: "建发玖珑湾", dist: "1km-2km" },
-                { name: "塘和家园·德悦苑", dist: ">2km" }, { name: "塘和家园·康城苑", dist: ">2km" }, { name: "新城上坤樾山", dist: ">2km" }, { name: "紫薇茗庭", dist: ">2km" }
+            // 用户指定的热门霸屏小区
+            const hotCommunities = [
+                { name: "兰馨苑", dist: "1km-2km" },
+                { name: "丁香苑", dist: "1km-2km" },
+                { name: "尚樱苑", dist: "1km-2km" },
+                { name: "祥和公寓", dist: "<500m" },
+                { name: "建发玖珑湾", dist: "1km-2km" },
+                { name: "金地二期", dist: "1km-2km" },
+                { name: "祥泽苑", dist: "1km-2km" }
             ];
 
-            // 你的引流价格策略
+            // 其他常规小区池
+            const regularCommunities = [
+                { name: "保利翡丽公馆", dist: "<500m" }, { name: "绿地云天坊", dist: "<500m" }, { name: "泗泾新苑", dist: "<500m" },
+                { name: "润和苑", dist: "500m-1km" }, { name: "金地玺华村", dist: "500m-1km" }, { name: "招商时代潮派", dist: "500m-1km" }, 
+                { name: "泗泾颐景园", dist: "500m-1km" }, { name: "褐石苑", dist: "1km-2km" }, { name: "鹭景苑", dist: "1km-2km" }, 
+                { name: "繁华里", dist: "1km-2km" }, { name: "紫竹苑", dist: "1km-2km" }, { name: "桂花苑", dist: "1km-2km" }, 
+                { name: "同润山河小城", dist: "1km-2km" }, { name: "玉兰苑", dist: "1km-2km" }, { name: "清泉警苑", dist: "1km-2km" }, 
+                { name: "塘和家园·德悦苑", dist: ">2km" }, { name: "新城上坤樾山", dist: ">2km" }, { name: "紫薇茗庭", dist: ">2km" }
+            ];
+
+            // 引流价格策略
             const roomTypes = [
                 { type: "三室一厅", displayType: "整租", min: 3300, max: 3500 },
                 { type: "两室一厅", displayType: "整租", min: 2800, max: 3000 },
@@ -179,34 +216,33 @@
                 { type: "合租次卧", displayType: "合租次卧", min: 800, max: 1100 }
             ];
 
-            const adjectives = ["极品", "急租", "房东直租", "全新精装", "超高性价比", "随时拎包", "朝南带阳台", "特价秒杀", "打工人首选"];
-            const tagPool = ["近地铁", "精装修", "押一付一", "朝南", "独立卫浴", "带阳台", "电梯房", "免物业费", "民水民电", "全套家电"];
+            const adjectives = ["热门好房", "极品", "急租", "房东直租", "全新精装", "超高性价比", "随时拎包", "朝南带阳台", "特价秒杀", "打工人首选"];
+            const tagPool = ["近地铁", "精装修", "押一付一", "朝南", "独立卫浴", "带阳台", "电梯房", "免物业费", "民水民电", "全套家电", "随时看房"];
 
             const generatedData = [];
 
-            for (let i = 0; i < 10000; i++) {
-                // 随机抽取小区和户型
-                const comm = communities[Math.floor(Math.random() * communities.length)];
-                const roomInfo = roomTypes[Math.floor(Math.random() * roomTypes.length)];
+            // 生成函数抽离
+            function createListing(i, communityPool, isHot = false) {
+                const comm = communityPool[Math.floor(Math.random() * communityPool.length)];
+                // 热门小区多推荐整租和一室户
+                const roomInfo = isHot 
+                    ? roomTypes[Math.floor(Math.random() * 4)] // 偏向好户型
+                    : roomTypes[Math.floor(Math.random() * roomTypes.length)];
                 
-                // 随机生成楼栋和单元（模拟真实，但不给具体房间号）
                 const buildingNum = Math.floor(Math.random() * 80) + 1;
                 const unitNum = Math.floor(Math.random() * 5) + 1;
-                
-                // 随机价格
                 const price = Math.floor(Math.random() * (roomInfo.max - roomInfo.min + 1)) + roomInfo.min;
                 
-                // 随机标题组合
-                const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+                const adj = isHot ? "热门好房 " : adjectives[Math.floor(Math.random() * adjectives.length)] + " ";
                 const title = `${adj}${roomInfo.type} ${comm.name} ${buildingNum}号楼${unitNum}单元`;
 
-                // 随机取 2-3 个标签
                 const tags = [];
                 const shuffledTags = tagPool.sort(() => 0.5 - Math.random());
                 tags.push(shuffledTags[0], shuffledTags[1]);
                 if (Math.random() > 0.5) tags.push(shuffledTags[2]);
+                if (isHot) tags.unshift("热门推荐"); // 热门小区专属标签
 
-                generatedData.push({
+                return {
                     id: i,
                     title: title,
                     community: comm.name,
@@ -214,7 +250,19 @@
                     type: roomInfo.displayType,
                     distance: comm.dist,
                     tags: tags
-                });
+                };
+            }
+
+            // 1. 先生成 100 套热门小区，保证它们绝对霸屏排在最前面
+            for (let i = 0; i < 100; i++) {
+                generatedData.push(createListing(i, hotCommunities, true));
+            }
+
+            // 2. 再生成剩余的 9900 套常规小区
+            for (let i = 100; i < 10000; i++) {
+                // 混合所有小区，但常规小区占绝大多数
+                const mixedPool = Math.random() > 0.8 ? hotCommunities : regularCommunities;
+                generatedData.push(createListing(i, mixedPool, false));
             }
 
             return generatedData;
@@ -222,6 +270,7 @@
 
         // 初始化加载数据
         function initData() {
+            checkWeChatEnv(); // 初始化时优先检测微信防封
             allListings = generateTrafficData();
             
             const badge = document.getElementById('db-status');
@@ -255,7 +304,7 @@
             renderGrid(filtered);
         }
 
-        // 渲染房源卡片 (限制最多渲染60条防卡顿)
+        // 渲染房源卡片 (限制最多渲染60条防卡顿，保证前排全是热门小区)
         function renderGrid(data) {
             const grid = document.getElementById('listings-grid');
             const emptyState = document.getElementById('empty-state');
@@ -275,7 +324,7 @@
             grid.classList.remove('hidden');
             emptyState.classList.add('hidden');
 
-            // 核心：为了防止浏览器崩溃，无论匹配出几千条，只截取前 60 条显示，剩下的用底部文案引流
+            // 核心：无论匹配出几千条，只截取前 60 条显示。由于我们在生成时把热门小区放在了数组最前面，这里截取出来的绝对是被热门小区霸屏的！
             const displayData = data.slice(0, 60);
             
             if (data.length > 60) {
@@ -289,7 +338,11 @@
                 if(item.distance === '<500m') distColor = 'bg-red-50 text-red-600 border border-red-100';
                 if(item.distance === '500m-1km') distColor = 'bg-orange-50 text-orange-600 border border-orange-100';
 
-                const tagsHtml = (item.tags || []).map(t => `<span class="px-2 py-1 bg-warm-50 text-warm-500 rounded text-xs border border-warm-100">${t}</span>`).join('');
+                // 如果包含"热门推荐"标签，给它一个特殊的红色高亮
+                const tagsHtml = (item.tags || []).map(t => {
+                    if (t === "热门推荐") return `<span class="px-2 py-1 bg-red-50 text-red-500 rounded text-xs border border-red-100 font-bold">${t}🔥</span>`;
+                    return `<span class="px-2 py-1 bg-warm-50 text-warm-500 rounded text-xs border border-warm-100">${t}</span>`;
+                }).join('');
 
                 const cardHtml = `
                     <div class="bg-white rounded-2xl border border-warm-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full">
