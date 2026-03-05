@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泗泾优选房源大厅</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 PapaParse 用于读取和解析 CSV 表格文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -35,7 +37,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <span id="db-status" class="flex items-center gap-1 text-xs font-medium text-warm-500 bg-warm-100 px-3 py-1.5 rounded-full">
-                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 连接中...
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 数据加载中...
                     </span>
                 </div>
             </div>
@@ -148,86 +150,70 @@
         </div>
     </div>
 
-    <!-- Firebase 实时数据库逻辑 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase 初始化配置
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
+    <!-- 纯前端表格读取逻辑 -->
+    <script>
         // 全局状态
-        let currentUser = null;
-        let allListings = []; // 从云端拉取的全量数据
+        let allListings = []; 
 
-        // 绑定 Modal 全局函数 (因为 module 作用域隔离)
+        // 默认演示数据（当 GitHub 上还没上传 data.csv 时显示）
+        const seedData = [
+            { id: 1, title: "朝南主卧带阳台 精装全配", community: "保利翡丽公馆", price: 2800, type: "合租主卧", distance: "<500m", tags: ["近地铁", "高端小区"] },
+            { id: 2, title: "高性价比一室户 随时看房", community: "丁香苑", price: 2100, type: "一室户", distance: "500m-1km", tags: ["朝南", "大空间"] },
+            { id: 3, title: "精装大两房 适合家庭整租", community: "同润山河小城", price: 4500, type: "整租", distance: "1km-2km", tags: ["户型方正", "随时拎包"] },
+            { id: 4, title: "新凯二期朝南次卧 押一付一", community: "兰馨苑", price: 1500, type: "合租次卧", distance: "1km-2km", tags: ["性价比高", "押一付一"] }
+        ];
+
+        // 绑定 Modal
         window.openContactModal = () => document.getElementById('contact-modal').classList.remove('hidden');
         window.closeContactModal = () => document.getElementById('contact-modal').classList.add('hidden');
 
-        // 1. 认证流程
-        async function initAuth() {
+        // 拉取 CSV 表格数据
+        async function fetchCSVData() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+                // 尝试读取同目录下的 data.csv 文件
+                const response = await fetch('data.csv');
+                if (!response.ok) {
+                    throw new Error('找不到 data.csv 文件');
                 }
+                const csvText = await response.text();
+                
+                // 使用 PapaParse 解析 CSV
+                Papa.parse(csvText, {
+                    header: true, // 表格第一行是表头
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        if(results.data && results.data.length > 0) {
+                            // 将 CSV 的列映射到我们的数据结构中
+                            allListings = results.data.map((row, index) => {
+                                // 兼容不同可能的表头命名
+                                const tagsStr = row['标签'] || row['tags'] || '';
+                                return {
+                                    id: index,
+                                    title: row['标题'] || row['title'] || '未命名房源',
+                                    community: row['小区'] || row['community'] || '未知小区',
+                                    price: parseInt(row['租金'] || row['price']) || 0,
+                                    type: row['户型'] || row['type'] || '未知户型',
+                                    distance: row['距离'] || row['distance'] || '未知距离',
+                                    tags: tagsStr ? tagsStr.split(/[，,]/).map(t => t.trim()).filter(t => t) : []
+                                };
+                            });
+                            updateDbStatus("connected");
+                            applyFilters();
+                        } else {
+                            throw new Error('CSV 文件是空的');
+                        }
+                    }
+                });
             } catch (error) {
-                console.error("Auth failed:", error);
-                updateDbStatus("auth-error");
+                console.warn("未能读取自定义表格，加载默认演示数据:", error);
+                // 如果没有 CSV 文件，使用内置的演示数据
+                allListings = [...seedData];
+                updateDbStatus("fallback");
+                applyFilters();
             }
         }
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                fetchRealtimeListings(); // 认证成功后拉取数据
-            }
-        });
-
-        // 2. 拉取实时数据
-        function fetchRealtimeListings() {
-            if (!currentUser) return;
-            
-            // 严格遵守路径规则：artifacts/{appId}/public/data/listings
-            const listingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'listings');
-            
-            onSnapshot(listingsRef, (snapshot) => {
-                if (snapshot.empty) {
-                    seedInitialData(); // 如果数据库没数据，注入初始演示数据
-                } else {
-                    allListings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    updateDbStatus("connected");
-                    applyFilters(); // 拉取完立刻应用筛选并渲染
-                }
-            }, (error) => {
-                console.error("Firestore error:", error);
-                updateDbStatus("error");
-            });
-        }
-
-        // 3. 初始数据库播种 (仅在首次运行无数据时触发)
-        async function seedInitialData() {
-            const seedData = [
-                { title: "朝南主卧带阳台 精装全配", community: "保利翡丽公馆", price: 2800, type: "合租主卧", distance: "<500m", tags: ["近地铁", "高端小区"], added: Date.now() },
-                { title: "高性价比一室户 随时看房", community: "丁香苑", price: 2100, type: "一室户", distance: "500m-1km", tags: ["朝南", "大空间"], added: Date.now() - 1000 },
-                { title: "精装大两房 适合家庭整租", community: "同润山河小城", price: 4500, type: "整租", distance: "1km-2km", tags: ["户型方正", "随时拎包"], added: Date.now() - 2000 },
-                { title: "新凯二期朝南次卧 押一付一", community: "兰馨苑", price: 1500, type: "合租次卧", distance: "1km-2km", tags: ["性价比高", "押一付一"], added: Date.now() - 3000 }
-            ];
-
-            const listingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'listings');
-            for (let i = 0; i < seedData.length; i++) {
-                // 使用 doc(collection, id) 手动指定ID确保不重复插入
-                await setDoc(doc(listingsRef, `seed_${i}`), seedData[i]);
-            }
-        }
-
-        // 4. 纯内存前端筛选逻辑
+        // 筛选逻辑
         function applyFilters() {
             const searchVal = document.getElementById('filter-search').value.toLowerCase();
             const distanceVal = document.getElementById('filter-distance').value;
@@ -235,16 +221,10 @@
             const priceVal = document.getElementById('filter-price').value;
 
             const filtered = allListings.filter(item => {
-                // 关键词检索 (匹配标题或小区)
                 const matchSearch = item.community.toLowerCase().includes(searchVal) || item.title.toLowerCase().includes(searchVal);
-                
-                // 距离检索
                 const matchDistance = distanceVal === 'all' || item.distance === distanceVal;
-                
-                // 户型检索
                 const matchType = typeVal === 'all' || item.type === typeVal;
                 
-                // 租金检索
                 let matchPrice = true;
                 if (priceVal !== 'all') {
                     const [min, max] = priceVal.split('-').map(Number);
@@ -254,13 +234,10 @@
                 return matchSearch && matchDistance && matchType && matchPrice;
             });
 
-            // 按添加时间倒序排列 (最新的在前)
-            filtered.sort((a, b) => b.added - a.added);
-            
             renderGrid(filtered);
         }
 
-        // 5. 渲染 UI
+        // 渲染房源卡片
         function renderGrid(data) {
             const grid = document.getElementById('listings-grid');
             const emptyState = document.getElementById('empty-state');
@@ -278,7 +255,6 @@
             emptyState.classList.add('hidden');
 
             data.forEach(item => {
-                // 距离标签颜色
                 let distColor = 'bg-warm-100 text-warm-600';
                 if(item.distance === '<500m') distColor = 'bg-red-50 text-red-600 border border-red-100';
                 if(item.distance === '500m-1km') distColor = 'bg-orange-50 text-orange-600 border border-orange-100';
@@ -318,15 +294,16 @@
             });
         }
 
-        // UI 状态提示
+        // 更新状态 UI
         function updateDbStatus(status) {
             const badge = document.getElementById('db-status');
             if (status === 'connected') {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 实时同步中`;
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 表格已同步`;
                 badge.className = "flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full shadow-sm";
-            } else if (status === 'error' || status === 'auth-error') {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> 连接失败`;
-                badge.className = "flex items-center gap-1 text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full";
+            } else if (status === 'fallback') {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> 演示数据`;
+                badge.className = "flex items-center gap-1 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full shadow-sm";
+                badge.title = "请在 GitHub 上传 data.csv 表格文件以显示您自己的房源";
             }
         }
 
@@ -344,8 +321,8 @@
             applyFilters();
         });
 
-        // 启动应用
-        initAuth();
+        // 页面加载完毕后拉取表格数据
+        document.addEventListener('DOMContentLoaded', fetchCSVData);
 
     </script>
 </body>
