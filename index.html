@@ -3,542 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>泗泾 3km 租房雷达 (Sijing Rental Radar)</title>
+    <title>泗泾优选房源大厅</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        warm: {
-                            50: '#faf9f8',
-                            100: '#f3f2ef',
-                            200: '#e8e5e1',
-                            300: '#d5d0c8',
-                            400: '#b8b1a6',
-                            500: '#9c9284',
-                            600: '#857a6c',
-                            700: '#6f6558',
-                            800: '#5c544b',
-                            900: '#4d463f',
-                        },
-                        accent: {
-                            500: '#0d9488', 
-                            600: '#0f766e',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                        warm: { 50: '#faf9f8', 100: '#f3f2ef', 200: '#e8e5e1', 300: '#d5d0c8', 400: '#b8b1a6', 500: '#9c9284', 600: '#857a6c', 700: '#6f6558', 800: '#5c544b', 900: '#4d463f' },
+                        accent: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e' }
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background-color: #faf9f8;
-            color: #4d463f;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 35vh;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-                max-height: 400px;
-            }
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { background-color: #faf9f8; color: #4d463f; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="antialiased font-sans">
+<body class="antialiased font-sans flex flex-col min-h-screen">
 
-    <!-- Chosen Palette: Warm Neutrals (Stone/Beige) with Teal Accents -->
-    <!-- Application Structure Plan: The SPA is designed as an interactive "Rental Radar Dashboard". It avoids the static table format of the source report and instead translates it into an exploratory tool. The structure is divided into two main logical sections: 1. A visual 'Macro-Overview' (using charts) to help users understand the distribution and density of housing across different Sijing zones, and 2. An 'Interactive Explorer' (searchable, filterable grid) that allows users to drill down into specific communities based on their preferences (distance, region, budget implied by tier). This dashboard approach supports the user goal of quickly identifying target properties within the massive 3km radius dataset without being overwhelmed. -->
-    <!-- Visualization & Content Choices: 
-         - Report Info: Distribution of communities across 6 macro regions. 
-         - Goal: Inform and Compare. Show where the bulk of housing is concentrated.
-         - Viz/Presentation Method: Donut Chart and Bar Chart.
-         - Interaction: Hover for exact counts. Filtering the list below updates the charts dynamically.
-         - Justification: Charts instantly convey that "Xinkai" and "Old Town" have the most options, aiding spatial awareness better than reading a table.
-         - Library/Method: Chart.js (Canvas). NO SVG/Mermaid.
-         - Report Info: Detailed community data (Name, Plate, Location, Remarks).
-         - Goal: Organize and Explore.
-         - Viz/Presentation Method: Interactive Grid of Cards.
-         - Interaction: Text search, Category dropdown filters.
-         - Justification: Cards make individual property complexes easier to scan and read than dense table rows. Search/filter lets users zero in on specific needs. 
-         - Library/Method: Vanilla JS + HTML/Tailwind. NO SVG/Mermaid. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
-    <nav class="bg-white border-b border-warm-200 sticky top-0 z-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white border-b border-warm-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">🚇</span>
-                    <span class="font-bold text-xl text-warm-900 tracking-tight">泗泾 3km 租房雷达</span>
+                    <span class="font-bold text-xl text-warm-900 tracking-tight">泗泾优选房源大厅</span>
                 </div>
-                <div class="text-sm font-medium text-warm-500 bg-warm-100 px-3 py-1 rounded-full">
-                    全景穷尽数据版 v2.0
+                <div class="flex items-center gap-3">
+                    <span id="db-status" class="flex items-center gap-1 text-xs font-medium text-warm-500 bg-warm-100 px-3 py-1.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 连接中...
+                    </span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <!-- 主体内容 -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- 头部介绍 -->
+        <div class="mb-8 max-w-3xl">
+            <h1 class="text-3xl font-bold text-warm-900 mb-3">实时真实租房库</h1>
+            <p class="text-lg text-warm-600">根据距离、户型和预算筛选您的理想好房。获取更多房源数据联系VX：17502100451。朋友圈有房源视频。</p>
+        </div>
 
-        <section class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-warm-200">
-            <div class="max-w-3xl">
-                <h1 class="text-3xl font-bold text-warm-900 mb-4">掌握泗泾租房全貌</h1>
-                <p class="text-lg text-warm-600 leading-relaxed">
-                    泗泾作为上海人口导入的超级枢纽，房源分布极其复杂。本应用基于《泗泾地铁站核心租房区域小区名录》，为您呈现泗泾地铁站周边 3 公里内的所有核心租房板块。通过下方的数据可视化与交互式探索工具，您可以快速了解各区域房源密度，并精准定位符合您通勤与生活需求的理想小区。
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                <div class="bg-warm-50 p-4 rounded-xl border border-warm-100">
-                    <div class="text-3xl mb-1">🏘️</div>
-                    <div class="text-2xl font-bold text-warm-900" id="stat-total">0</div>
-                    <div class="text-sm text-warm-500">总收录小区/组团</div>
-                </div>
-                <div class="bg-warm-50 p-4 rounded-xl border border-warm-100">
-                    <div class="text-3xl mb-1">📍</div>
-                    <div class="text-2xl font-bold text-warm-900" id="stat-regions">0</div>
-                    <div class="text-sm text-warm-500">核心大区板块</div>
-                </div>
-                <div class="bg-warm-50 p-4 rounded-xl border border-warm-100">
-                    <div class="text-3xl mb-1">🚶</div>
-                    <div class="text-2xl font-bold text-warm-900">0-3 km</div>
-                    <div class="text-sm text-warm-500">精准辐射范围</div>
-                </div>
-                <div class="bg-warm-50 p-4 rounded-xl border border-warm-100">
-                    <div class="text-3xl mb-1">✨</div>
-                    <div class="text-2xl font-bold text-warm-900">100%</div>
-                    <div class="text-sm text-warm-500">底端苑/期细化</div>
-                </div>
-            </div>
-        </section>
-
-        <section class="space-y-6">
-            <div>
-                <h2 class="text-2xl font-bold text-warm-900 mb-2">区域房源热度分布 (大区视图)</h2>
-                <p class="text-warm-600">
-                    此区域通过图表直观展示了泗泾周边各大居住板块的规模。饼图呈现了各大区在整体租房生态中的占比，柱状图则清晰对比了各板块包含的独立小区/组团数量。交互提示：图表会随着下方的数据筛选实时动态更新，帮助您分析特定条件下的区域特征。
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-warm-200">
-                    <h3 class="text-lg font-semibold text-warm-800 mb-6 text-center">小区板块占比分布</h3>
-                    <div class="chart-container">
-                        <canvas id="regionDonutChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-warm-200">
-                    <h3 class="text-lg font-semibold text-warm-800 mb-6 text-center">各区域小区组团数量对比</h3>
-                    <div class="chart-container">
-                        <canvas id="regionBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="space-y-6" id="explorer">
-            <div>
-                <h2 class="text-2xl font-bold text-warm-900 mb-2">房源雷达交互库</h2>
-                <p class="text-warm-600">
-                    使用下方的雷达搜索工具，直接检索您感兴趣的小区名称（如“丁香苑”、“褐石苑”），或者通过下拉菜单筛选特定的大区。系统将立即为您过滤出符合条件的目标，并提供详细的方位、距离与板块评估信息。
-                </p>
-            </div>
-
-            <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-warm-200 flex flex-col sm:flex-row gap-4 sticky top-16 z-40 bg-opacity-95 backdrop-blur">
-                <div class="flex-1 relative">
+        <!-- 筛选控制台 -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-warm-200 mb-8 sticky top-20 z-40 bg-opacity-95 backdrop-blur">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                
+                <!-- 关键词搜索 -->
+                <div class="lg:col-span-2 relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-warm-400">🔍</span>
-                    <input type="text" id="searchInput" placeholder="搜索小区名称、花草苑名或备注特征..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent bg-warm-50 transition-all text-warm-900">
+                    <input type="text" id="filter-search" placeholder="输入小区名称 (如: 丁香苑、保利)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50">
                 </div>
-                <div class="w-full sm:w-64">
-                    <select id="regionSelect" class="w-full px-4 py-3 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 cursor-pointer appearance-none">
-                        <option value="all">所有大区分类</option>
+                
+                <!-- 距离检索 -->
+                <div>
+                    <select id="filter-distance" class="w-full px-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none">
+                        <option value="all">所有距离</option>
+                        <option value="<500m">步行核心 (< 500m)</option>
+                        <option value="500m-1km">电车通勤 (500m-1km)</option>
+                        <option value="1km-2km">公交接驳 (1km-2km)</option>
+                        <option value=">2km">远距大居 (> 2km)</option>
                     </select>
                 </div>
-                <button id="resetBtn" class="px-6 py-3 bg-warm-200 hover:bg-warm-300 text-warm-800 font-medium rounded-xl transition-colors whitespace-nowrap">
-                    重置
+
+                <!-- 户型检索 -->
+                <div>
+                    <select id="filter-type" class="w-full px-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none">
+                        <option value="all">所有户型</option>
+                        <option value="整租">整租房源</option>
+                        <option value="合租主卧">合租主卧 (带独卫)</option>
+                        <option value="合租次卧">合租次卧</option>
+                        <option value="一室户">独立一室户</option>
+                    </select>
+                </div>
+
+                <!-- 租金检索 -->
+                <div>
+                    <select id="filter-price" class="w-full px-4 py-2.5 rounded-xl border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none">
+                        <option value="all">所有租金</option>
+                        <option value="0-1500">¥1500 以下</option>
+                        <option value="1500-2500">¥1500 - ¥2500</option>
+                        <option value="2500-4000">¥2500 - ¥4000</option>
+                        <option value="4000-99999">¥4000 以上</option>
+                    </select>
+                </div>
+
+            </div>
+            
+            <!-- 重置按钮与统计 -->
+            <div class="mt-4 pt-4 border-t border-warm-100 flex justify-between items-center">
+                <div class="text-sm text-warm-500">
+                    共找到 <span id="results-count" class="font-bold text-accent-600">0</span> 套符合条件的房源
+                </div>
+                <button id="btn-reset" class="text-sm font-medium text-warm-500 hover:text-warm-800 transition-colors">
+                    清除所有筛选条件
                 </button>
             </div>
+        </div>
 
-            <div id="noResults" class="hidden py-12 text-center bg-white rounded-2xl border border-warm-200 border-dashed">
-                <div class="text-4xl mb-3 text-warm-300">🧭</div>
-                <h3 class="text-lg font-medium text-warm-900">未找到匹配的房源小区</h3>
-                <p class="text-warm-500 mt-1">请尝试调整搜索关键词或清空筛选条件</p>
-            </div>
+        <!-- 房源列表 Grid -->
+        <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- 骨架屏 (加载中状态) -->
+            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
+            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
+            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
+            <div class="bg-white p-5 rounded-2xl border border-warm-200 shadow-sm animate-pulse h-64"></div>
+        </div>
 
-            <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            </div>
-        </section>
-
-        <footer class="pt-8 pb-12 border-t border-warm-200 text-center text-warm-500 text-sm">
-            <p>数据来源：《泗泾地铁站周边3公里详细小区名录 (全景穷尽大表版)》</p>
-            <p class="mt-1">构建无死角、全覆盖的租房数据检索体验</p>
-        </footer>
+        <!-- 无结果空状态 -->
+        <div id="empty-state" class="hidden py-16 text-center bg-white rounded-2xl border border-warm-200 border-dashed">
+            <div class="text-5xl mb-4 text-warm-300">🕵️</div>
+            <h3 class="text-xl font-medium text-warm-900">暂无符合条件的房源</h3>
+            <p class="text-warm-500 mt-2">试试减少一些筛选条件，或者换个小区名称搜索。</p>
+        </div>
 
     </main>
 
-    <script>
-        const rawData = [
-            { region: "核心商圈及老镇", plate: "地铁上盖", name: "保利翡丽公馆", location: "站正南，<500米", note: "泗泾标杆，高端租客首选" },
-            { region: "核心商圈及老镇", plate: "地铁上盖", name: "绿地云天坊", location: "站正南，<500米", note: "含部分住宅及商住公寓" },
-            { region: "核心商圈及老镇", plate: "地铁上盖", name: "泗泾新苑", location: "站正西，约500米", note: "距离地铁最近的动迁房" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "润和苑", location: "站东南，约800米", note: "泗泾老牌商品房" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "金地玺华村", location: "站西南，约800米", note: "靠近金地方邻商业" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "淘和苑", location: "站东南，约1公里", note: "地图关键补充，靠近金谷公寓" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "五村社区（泗泾五村）", location: "站西南，约1公里", note: "地图关键补充，本地老社区" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "外婆村", location: "站正南，约800米", note: "地图关键补充，房源集中地" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "江川二村", location: "站东南，约1.2公里", note: "泗泾老镇公房，租金极具性价比" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "江川一村", location: "站东南，约1公里", note: "泗泾老镇公房" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "金谷公寓", location: "站东南，约1.2公里", note: "老镇成熟社区" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "中京苑", location: "站东南，约1.5公里", note: "靠近古镇" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "绿波景园", location: "站东南，约1.5公里", note: "大型成熟老旧社区" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "丽水馨庭", location: "站东南，约1.5公里", note: "泗泾老镇生活气息浓厚" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "嘉和景苑", location: "站东南，约1.8公里", note: "靠近松江实中，陪读租客多" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "钱家小区", location: "站东南，约2公里", note: "偏东南角的老社区" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "张泾小区", location: "站东南，约2公里", note: "偏东南角的老社区" },
-            { region: "核心商圈及老镇", plate: "老镇核心", name: "打铁桥小区", location: "站东南，约2公里", note: "偏东南角的老社区" },
-            { region: "北部商品房与配套", plate: "正北/西北", name: "祥泽苑", location: "站西北，约1.5-2公里", note: "规定边界的最西北角" },
-            { region: "北部商品房与配套", plate: "正北/西北", name: "晶筑嘉苑", location: "站西北，约1.5公里", note: "次新房社区" },
-            { region: "北部商品房与配套", plate: "正北/西北", name: "晶典嘉苑", location: "站西北，约1.5-1.8公里", note: "与晶筑嘉苑相邻" },
-            { region: "北部商品房与配套", plate: "正北/西北", name: "万业名苑", location: "站正北，约1-1.2公里", note: "北部成熟商品房" },
-            { region: "北部商品房与配套", plate: "正北/西北", name: "泗水和鸣", location: "站正北，约1-1.2公里", note: "招商系次新盘，设施新" },
-            { region: "北部商品房与配套", plate: "东北片区", name: "招商时代潮派", location: "站东北，约800米", note: "距地铁较近的次新盘" },
-            { region: "北部商品房与配套", plate: "东北片区", name: "泗泾颐景园", location: "站东北，约800米-1公里", note: "苏州园林风格，体量较大" },
-            { region: "北部商品房与配套", plate: "东北片区", name: "上海云顶别墅", location: "站东北，约1.2公里", note: "别墅区，合租或高端需求" },
-            { region: "北部商品房与配套", plate: "东北片区", name: "长浜桥小区", location: "站东北，约1-1.5公里", note: "偏东侧的本地社区" },
-            { region: "北部商品房与配套", plate: "东北长租", name: "有巢国际公寓社区", location: "站东北，约1.5-1.8公里", note: "集中式长租公寓，白领多" },
-            { region: "北部商品房与配套", plate: "东北长租", name: "派米雷新视界", location: "站东侧边界，约1.8公里", note: "规定边界的最东侧" },
-            { region: "金地自在城大盘", plate: "金地一期", name: "褐石苑", location: "站西北，约1.2公里", note: "红砖外立面，洋房与高层混合" },
-            { region: "金地自在城大盘", plate: "金地二期", name: "鹭景苑", location: "站西北，约1-1.5公里", note: "绿化极好，水系环绕" },
-            { region: "金地自在城大盘", plate: "金地三期", name: "繁华里", location: "站正西/西南，约1.5公里", note: "靠近商业街，生活最便利" },
-            { region: "金地自在城大盘", plate: "金地四期", name: "境尚苑", location: "站西侧，约1.5-1.8公里", note: "相对较新，品质高" },
-            { region: "金地自在城大盘", plate: "金地五期", name: "优尚名邸", location: "站西南，约1.8-2公里", note: "小区维护较好" },
-            { region: "金地自在城大盘", plate: "金地其他", name: "悠悦城", location: "站西南，约1.8公里", note: "包含商住小户型" },
-            { region: "新凯家园动迁大居", plate: "新凯一期", name: "桂花苑", location: "站正西，约1-1.2公里", note: "属于新凯最早一批，配套最熟" },
-            { region: "新凯家园动迁大居", plate: "新凯一期", name: "百合苑", location: "站正西，约1-1.2公里", note: "紧邻商业配套" },
-            { region: "新凯家园动迁大居", plate: "新凯一期", name: "水仙苑", location: "站正西，约1.2公里", note: "紧邻商业配套" },
-            { region: "新凯家园动迁大居", plate: "新凯一期补充", name: "牡丹苑", location: "站正西，约1.2公里", note: "彻底补全遗漏花草名" },
-            { region: "新凯家园动迁大居", plate: "新凯一期补充", name: "白玉兰苑", location: "站正西，约1.2公里", note: "彻底补全遗漏花草名" },
-            { region: "新凯家园动迁大居", plate: "新凯一期补充", name: "玫瑰苑", location: "站西南，约1.5公里", note: "核心大组团" },
-            { region: "新凯家园动迁大居", plate: "新凯二期/新凯城", name: "丁香苑", location: "站正西，约1公里", note: "新凯核心组团，房源海量" },
-            { region: "新凯家园动迁大居", plate: "新凯二期/新凯城", name: "兰馨苑", location: "站正西，约1.5公里", note: "二期核心大组团" },
-            { region: "新凯家园动迁大居", plate: "新凯二期/新凯城", name: "紫竹苑", location: "站正西，约1.5公里", note: "主力房源组团" },
-            { region: "新凯家园动迁大居", plate: "新凯三期/新凯城", name: "紫荆苑", location: "站西南，约1.2-1.5公里", note: "主力房源组团" },
-            { region: "新凯家园动迁大居", plate: "新凯三期/新凯城", name: "丹桂苑", location: "站西偏北，约1.5公里", note: "主力房源组团" },
-            { region: "新凯家园动迁大居", plate: "新凯三期/新凯城", name: "迎春苑", location: "站西偏北，约1.5公里", note: "主力房源组团" },
-            { region: "新凯家园动迁大居", plate: "新凯四期/新凯城", name: "玉兰苑", location: "站西侧边界，约1.5-2公里", note: "规定边界的最西侧" },
-            { region: "新凯家园动迁大居", plate: "新凯四期/新凯城", name: "香樟苑", location: "站西侧边界，约1.5-2公里", note: "规定边界的最西侧" },
-            { region: "新凯家园动迁大居", plate: "新凯四期/新凯城", name: "银杏苑", location: "站西侧边界，约1.8公里", note: "四期房源" },
-            { region: "新凯家园动迁大居", plate: "新凯四期/新凯城", name: "翠柏苑", location: "站西侧边界，约1.8公里", note: "四期房源" },
-            { region: "南部高品质商品房", plate: "同润系", name: "同润碧水湾花园", location: "站正南偏西，约1.2公里", note: "临河商品房，环境好" },
-            { region: "南部高品质商品房", plate: "同润系", name: "同润山河小城", location: "站正南，约1.5公里", note: "泗泾南部热门商品房，户型方正" },
-            { region: "南部高品质商品房", plate: "独立商品房", name: "润江花苑", location: "站正南，约1.5公里", note: "南部成熟住区" },
-            { region: "南部高品质商品房", plate: "独立商品房", name: "古楼新苑", location: "站正南，约1.8公里", note: "成熟配套社区" },
-            { region: "南部高品质商品房", plate: "高端改善", name: "华润佘山九里", location: "站正南，约1.8公里", note: "高品质商品房/别墅区" },
-            { region: "南部高品质商品房", plate: "建发系", name: "建发玖珑湾", location: "站西南，约1.8公里", note: "新中式风格，年轻白领多" },
-            { region: "南部高品质商品房", plate: "融创系", name: "融创壹号公馆 / 璟宁公馆", location: "站西南，约2公里", note: "精装交付，租金相对较高" },
-            { region: "南部交界超级大居", plate: "新凯外延", name: "清泉警苑", location: "站西南（河南侧），约1.5公里", note: "靠近新凯南侧的成熟住区" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·康城苑", location: "站正南偏东，约1.8-2公里", note: "塘和家园靠北组团" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·久康苑", location: "站正南偏东，约2公里", note: "紧邻康城苑" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·德悦苑", location: "站正南，约2.2公里", note: "核心大盘，租客极多" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·祥和苑", location: "站正南，约2.2公里", note: "塘和家园内部组团" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·德宁苑", location: "站正南，约2.5公里", note: "规定边界的南侧节点" },
-            { region: "南部交界超级大居", plate: "塘和家园", name: "塘和家园·登云苑", location: "站正南偏东，约2.5公里", note: "规定边界的南侧节点" },
-            { region: "南部交界超级大居", plate: "南侧边界延展", name: "紫薇茗庭", location: "站正南，约2.5-3公里", note: "极其热门，承接泗泾租房刚需" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·漫町", location: "站西南，约2公里", note: "樾山系高层公寓主力" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·半岛", location: "站西南，约2.2公里", note: "高品质混合社区" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·明月", location: "站西南，约2.5公里", note: "品质改善盘" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·璟墅", location: "站西南，约2.5公里", note: "别墅/叠加为主" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·四季", location: "站西南，约2.5公里", note: "补全上坤樾山地块" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·安澜", location: "站西南，约2.5公里", note: "补全上坤樾山地块" },
-            { region: "南部交界超级大居", plate: "上坤樾山", name: "新城上坤樾山·华墅", location: "站西南，约2.5公里", note: "补全上坤樾山地块" }
-        ];
+    <!-- 联系看房 Modal -->
+    <div id="contact-modal" class="fixed inset-0 bg-warm-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden text-center transform transition-all">
+            <div class="p-8">
+                <div class="w-16 h-16 bg-accent-100 text-accent-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    👋
+                </div>
+                <h3 class="text-2xl font-bold text-warm-900 mb-2">联系看房</h3>
+                <p class="text-warm-500 mb-6 text-sm">此房源由专属管家维护，扫码或添加微信获取底价和真实看房视频。</p>
+                
+                <div class="bg-warm-50 border border-warm-200 rounded-xl p-4 mb-6">
+                    <p class="text-xs text-warm-500 uppercase tracking-wider font-bold mb-1">专属客服微信</p>
+                    <p class="text-xl font-bold text-accent-700 select-all">17502100451</p>
+                    <p class="text-xs text-warm-400 mt-2">7*24小时极速响应</p>
+                </div>
 
-        let state = {
-            searchQuery: "",
-            selectedRegion: "all",
-            filteredData: [...rawData]
-        };
+                <button onclick="closeContactModal()" class="w-full bg-warm-900 text-white font-medium py-3 rounded-xl hover:bg-warm-800 transition-colors">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
 
-        let donutChartInstance = null;
-        let barChartInstance = null;
+    <!-- Firebase 实时数据库逻辑 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const chartColors = [
-            '#0d9488', 
-            '#eab308', 
-            '#f97316', 
-            '#8b5cf6', 
-            '#ec4899', 
-            '#64748b'  
-        ];
+        // Firebase 初始化配置
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        function init() {
-            populateRegionSelect();
-            updateStats();
-            initCharts();
-            renderCards();
-            setupEventListeners();
+        // 全局状态
+        let currentUser = null;
+        let allListings = []; // 从云端拉取的全量数据
+
+        // 绑定 Modal 全局函数 (因为 module 作用域隔离)
+        window.openContactModal = () => document.getElementById('contact-modal').classList.remove('hidden');
+        window.closeContactModal = () => document.getElementById('contact-modal').classList.add('hidden');
+
+        // 1. 认证流程
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth failed:", error);
+                updateDbStatus("auth-error");
+            }
         }
 
-        function populateRegionSelect() {
-            const select = document.getElementById('regionSelect');
-            const regions = [...new Set(rawData.map(item => item.region))];
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                fetchRealtimeListings(); // 认证成功后拉取数据
+            }
+        });
+
+        // 2. 拉取实时数据
+        function fetchRealtimeListings() {
+            if (!currentUser) return;
             
-            regions.forEach(region => {
-                const option = document.createElement('option');
-                option.value = region;
-                option.textContent = region;
-                select.appendChild(option);
-            });
-        }
-
-        function updateStats() {
-            document.getElementById('stat-total').textContent = rawData.length;
-            const uniqueRegions = new Set(rawData.map(item => item.region)).size;
-            document.getElementById('stat-regions').textContent = uniqueRegions;
-        }
-
-        function setupEventListeners() {
-            const searchInput = document.getElementById('searchInput');
-            const regionSelect = document.getElementById('regionSelect');
-            const resetBtn = document.getElementById('resetBtn');
-
-            searchInput.addEventListener('input', (e) => {
-                state.searchQuery = e.target.value.toLowerCase();
-                filterData();
-            });
-
-            regionSelect.addEventListener('change', (e) => {
-                state.selectedRegion = e.target.value;
-                filterData();
-            });
-
-            resetBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                regionSelect.value = 'all';
-                state.searchQuery = '';
-                state.selectedRegion = 'all';
-                filterData();
-            });
-        }
-
-        function filterData() {
-            state.filteredData = rawData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(state.searchQuery) || 
-                                    item.note.toLowerCase().includes(state.searchQuery) ||
-                                    item.location.toLowerCase().includes(state.searchQuery) ||
-                                    item.plate.toLowerCase().includes(state.searchQuery);
-                const matchRegion = state.selectedRegion === 'all' || item.region === state.selectedRegion;
-                return matchSearch && matchRegion;
-            });
-
-            renderCards();
-            updateCharts();
-        }
-
-        function renderCards() {
-            const container = document.getElementById('cardsContainer');
-            const noResults = document.getElementById('noResults');
+            // 严格遵守路径规则：artifacts/{appId}/public/data/listings
+            const listingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'listings');
             
-            container.innerHTML = '';
+            onSnapshot(listingsRef, (snapshot) => {
+                if (snapshot.empty) {
+                    seedInitialData(); // 如果数据库没数据，注入初始演示数据
+                } else {
+                    allListings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    updateDbStatus("connected");
+                    applyFilters(); // 拉取完立刻应用筛选并渲染
+                }
+            }, (error) => {
+                console.error("Firestore error:", error);
+                updateDbStatus("error");
+            });
+        }
 
-            if (state.filteredData.length === 0) {
-                container.classList.add('hidden');
-                noResults.classList.remove('hidden');
+        // 3. 初始数据库播种 (仅在首次运行无数据时触发)
+        async function seedInitialData() {
+            const seedData = [
+                { title: "朝南主卧带阳台 精装全配", community: "保利翡丽公馆", price: 2800, type: "合租主卧", distance: "<500m", tags: ["近地铁", "高端小区"], added: Date.now() },
+                { title: "高性价比一室户 随时看房", community: "丁香苑", price: 2100, type: "一室户", distance: "500m-1km", tags: ["朝南", "大空间"], added: Date.now() - 1000 },
+                { title: "精装大两房 适合家庭整租", community: "同润山河小城", price: 4500, type: "整租", distance: "1km-2km", tags: ["户型方正", "随时拎包"], added: Date.now() - 2000 },
+                { title: "新凯二期朝南次卧 押一付一", community: "兰馨苑", price: 1500, type: "合租次卧", distance: "1km-2km", tags: ["性价比高", "押一付一"], added: Date.now() - 3000 }
+            ];
+
+            const listingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'listings');
+            for (let i = 0; i < seedData.length; i++) {
+                // 使用 doc(collection, id) 手动指定ID确保不重复插入
+                await setDoc(doc(listingsRef, `seed_${i}`), seedData[i]);
+            }
+        }
+
+        // 4. 纯内存前端筛选逻辑
+        function applyFilters() {
+            const searchVal = document.getElementById('filter-search').value.toLowerCase();
+            const distanceVal = document.getElementById('filter-distance').value;
+            const typeVal = document.getElementById('filter-type').value;
+            const priceVal = document.getElementById('filter-price').value;
+
+            const filtered = allListings.filter(item => {
+                // 关键词检索 (匹配标题或小区)
+                const matchSearch = item.community.toLowerCase().includes(searchVal) || item.title.toLowerCase().includes(searchVal);
+                
+                // 距离检索
+                const matchDistance = distanceVal === 'all' || item.distance === distanceVal;
+                
+                // 户型检索
+                const matchType = typeVal === 'all' || item.type === typeVal;
+                
+                // 租金检索
+                let matchPrice = true;
+                if (priceVal !== 'all') {
+                    const [min, max] = priceVal.split('-').map(Number);
+                    matchPrice = item.price >= min && item.price <= max;
+                }
+
+                return matchSearch && matchDistance && matchType && matchPrice;
+            });
+
+            // 按添加时间倒序排列 (最新的在前)
+            filtered.sort((a, b) => b.added - a.added);
+            
+            renderGrid(filtered);
+        }
+
+        // 5. 渲染 UI
+        function renderGrid(data) {
+            const grid = document.getElementById('listings-grid');
+            const emptyState = document.getElementById('empty-state');
+            document.getElementById('results-count').textContent = data.length;
+
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
                 return;
             }
 
-            container.classList.remove('hidden');
-            noResults.classList.add('hidden');
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
 
-            state.filteredData.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-white p-5 rounded-2xl border border-warm-200 shadow-sm hover:shadow-md hover:border-accent-500 transition-all duration-300 group cursor-default flex flex-col h-full";
-                
-                let regionColorClass = "bg-warm-100 text-warm-700";
-                if(item.region.includes('老镇')) regionColorClass = "bg-orange-100 text-orange-700";
-                if(item.region.includes('大居') || item.region.includes('新凯')) regionColorClass = "bg-blue-100 text-blue-700";
-                if(item.region.includes('高品质')) regionColorClass = "bg-purple-100 text-purple-700";
-                if(item.region.includes('金地')) regionColorClass = "bg-yellow-100 text-yellow-700";
+            data.forEach(item => {
+                // 距离标签颜色
+                let distColor = 'bg-warm-100 text-warm-600';
+                if(item.distance === '<500m') distColor = 'bg-red-50 text-red-600 border border-red-100';
+                if(item.distance === '500m-1km') distColor = 'bg-orange-50 text-orange-600 border border-orange-100';
 
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${regionColorClass}">
-                            ${item.region}
-                        </span>
-                        <span class="text-xs text-warm-400 font-medium">${item.plate}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-warm-900 mb-2 group-hover:text-accent-600 transition-colors">${item.name}</h3>
-                    <div class="flex items-start gap-2 mt-auto pt-4 mb-2">
-                        <span class="text-warm-400 mt-0.5">📍</span>
-                        <p class="text-sm text-warm-600 leading-snug">${item.location}</p>
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <span class="text-warm-400 mt-0.5">📝</span>
-                        <p class="text-sm text-warm-600 leading-snug font-medium">${item.note}</p>
+                const tagsHtml = (item.tags || []).map(t => `<span class="px-2 py-1 bg-warm-50 text-warm-500 rounded text-xs border border-warm-100">${t}</span>`).join('');
+
+                const cardHtml = `
+                    <div class="bg-white rounded-2xl border border-warm-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full">
+                        <div class="p-5 flex-1 flex flex-col">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="text-xs font-bold px-2 py-1 rounded-md ${distColor}">${item.distance}</span>
+                                <span class="text-xs font-bold px-2 py-1 rounded-md bg-accent-50 text-accent-700">${item.type}</span>
+                            </div>
+                            
+                            <h3 class="font-bold text-lg text-warm-900 leading-snug mb-2 line-clamp-2">${item.title}</h3>
+                            
+                            <div class="flex items-center text-warm-500 text-sm mb-4 font-medium">
+                                🏡 ${item.community}
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-1 mb-4 mt-auto">
+                                ${tagsHtml}
+                            </div>
+                            
+                            <div class="pt-4 border-t border-warm-100 flex justify-between items-center mt-auto">
+                                <div class="text-accent-600 font-bold">
+                                    <span class="text-sm">¥</span><span class="text-2xl">${item.price}</span><span class="text-xs text-warm-400 font-normal">/月</span>
+                                </div>
+                                <button onclick="openContactModal()" class="px-4 py-2 bg-warm-900 hover:bg-warm-800 text-white text-sm font-medium rounded-xl transition-colors">
+                                    联系看房
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 `;
-                container.appendChild(card);
+                grid.insertAdjacentHTML('beforeend', cardHtml);
             });
         }
 
-        function getChartData() {
-            const regionCounts = {};
-            state.filteredData.forEach(item => {
-                regionCounts[item.region] = (regionCounts[item.region] || 0) + 1;
-            });
-
-            const labels = Object.keys(regionCounts);
-            const data = Object.values(regionCounts);
-
-            return { labels, data };
-        }
-
-        function initCharts() {
-            const chartData = getChartData();
-
-            Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
-            Chart.defaults.color = '#5c544b';
-
-            const donutCtx = document.getElementById('regionDonutChart').getContext('2d');
-            donutChartInstance = new Chart(donutCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: chartData.labels,
-                    datasets: [{
-                        data: chartData.data,
-                        backgroundColor: chartColors,
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 15,
-                                font: { size: 12 },
-                                generateLabels: function(chart) {
-                                    const data = chart.data;
-                                    if (data.labels.length && data.datasets.length) {
-                                        return data.labels.map(function(label, i) {
-                                            const meta = chart.getDatasetMeta(0);
-                                            const style = meta.controller.getStyle(i);
-                                            
-                                            let finalLabel = label;
-                                            if (finalLabel.length > 8) {
-                                                finalLabel = finalLabel.substring(0, 8) + '...';
-                                            }
-                                            
-                                            return {
-                                                text: finalLabel + ' (' + data.datasets[0].data[i] + ')',
-                                                fillStyle: style.backgroundColor,
-                                                strokeStyle: style.borderColor,
-                                                lineWidth: style.borderWidth,
-                                                hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
-                                                index: i
-                                            };
-                                        });
-                                    }
-                                    return [];
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.label}: ${context.parsed} 个小区`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
-
-            const barCtx = document.getElementById('regionBarChart').getContext('2d');
-            barChartInstance = new Chart(barCtx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.labels.map(l => l.length > 6 ? l.substring(0,6)+'...' : l),
-                    datasets: [{
-                        label: '小区数量',
-                        data: chartData.data,
-                        backgroundColor: chartColors[0] + 'CC',
-                        borderColor: chartColors[0],
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) {
-                                    return chartData.labels[context[0].dataIndex];
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { precision: 0 },
-                            grid: { color: '#e8e5e1' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateCharts() {
-            const chartData = getChartData();
-            
-            if(donutChartInstance) {
-                donutChartInstance.data.labels = chartData.labels;
-                donutChartInstance.data.datasets[0].data = chartData.data;
-                donutChartInstance.update();
-            }
-
-            if(barChartInstance) {
-                barChartInstance.data.labels = chartData.labels.map(l => l.length > 6 ? l.substring(0,6)+'...' : l);
-                barChartInstance.data.datasets[0].data = chartData.data;
-                barChartInstance.options.plugins.tooltip.callbacks.title = function(context) {
-                    return chartData.labels[context[0].dataIndex];
-                };
-                barChartInstance.update();
+        // UI 状态提示
+        function updateDbStatus(status) {
+            const badge = document.getElementById('db-status');
+            if (status === 'connected') {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 实时同步中`;
+                badge.className = "flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full shadow-sm";
+            } else if (status === 'error' || status === 'auth-error') {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> 连接失败`;
+                badge.className = "flex items-center gap-1 text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full";
             }
         }
 
-        document.addEventListener('DOMContentLoaded', init);
+        // 绑定筛选事件
+        const filterIds = ['filter-search', 'filter-distance', 'filter-type', 'filter-price'];
+        filterIds.forEach(id => {
+            document.getElementById(id).addEventListener(id === 'filter-search' ? 'input' : 'change', applyFilters);
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-distance').value = 'all';
+            document.getElementById('filter-type').value = 'all';
+            document.getElementById('filter-price').value = 'all';
+            applyFilters();
+        });
+
+        // 启动应用
+        initAuth();
+
     </script>
 </body>
 </html>
