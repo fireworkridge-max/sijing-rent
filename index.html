@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>泗泾租房主理人 - 最全底价真房源</title>
+    <title>泗泾租房主理人 - 100%真实底价好房</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,11 +32,10 @@
 </head>
 <body class="antialiased font-sans flex flex-col min-h-screen relative">
 
-    <!-- 背景点缀 -->
     <div class="absolute inset-0 hero-pattern z-[-1]"></div>
     <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-accent-100 blur-3xl opacity-50 z-[-1]"></div>
 
-    <!-- 顶部导航 (压缩了手机端高度) -->
+    <!-- 顶部导航 -->
     <nav class="bg-white/90 backdrop-blur-md border-b border-warm-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-12 md:h-16 items-center">
@@ -45,82 +44,59 @@
                     <span class="font-bold text-lg md:text-xl text-warm-900 tracking-tight">泗泾租房主理人</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="bg-orange-100 text-orange-600 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold tracking-wider">免中介费</span>
-                    <span id="db-status" class="hidden sm:flex items-center gap-1 text-xs font-medium text-warm-500 bg-warm-100 px-3 py-1 rounded-full">
-                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 库房加载中...
-                    </span>
+                    <span class="bg-green-100 text-green-700 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold tracking-wider flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> 100% 真房源</span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- 主体内容 (减小了手机端顶部 padding) -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 md:py-10">
         
-        <!-- 主理人自白卡片 (极简模式：左右排版，防遮挡) -->
+        <!-- 主理人自白卡片 -->
         <div class="mb-4 md:mb-10 bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm border border-warm-200 relative overflow-hidden">
-            <!-- 搞怪背景装饰 -->
             <div class="absolute -right-8 -top-8 w-32 h-32 bg-yellow-100 rounded-full opacity-50"></div>
             
-            <div class="relative z-10 flex flex-row gap-3 md:gap-8 items-center">
-                <!-- 搞怪&极具记忆点的头像：泗泾包租公/懂行老炮 -->
-                <div class="w-16 h-16 md:w-32 md:h-32 shrink-0 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full flex items-center justify-center text-4xl md:text-6xl shadow-md border-2 md:border-4 border-white transform -rotate-12 hover:rotate-12 transition-transform duration-300">
+            <div class="relative z-10 flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-center">
+                <div class="w-16 h-16 md:w-32 md:h-32 shrink-0 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full flex items-center justify-center text-4xl md:text-6xl shadow-md border-2 md:border-4 border-white transform -rotate-12 hover:rotate-12 transition-transform duration-300 self-center md:self-auto">
                     🥸
                 </div>
                 
                 <div class="flex-1">
-                    <h1 class="text-lg md:text-3xl font-extrabold text-warm-900 leading-tight">
+                    <h1 class="text-lg md:text-3xl font-extrabold text-warm-900 leading-tight text-center md:text-left">
                         泗泾租房主理人
-                        <span class="text-accent-600 text-sm md:text-2xl mt-0.5 md:mt-2 block font-bold">收录全网最全底价房源</span>
+                        <span class="text-accent-600 text-sm md:text-2xl mt-0.5 md:mt-2 block font-bold">拒绝套路 · 只发真实笋盘</span>
                     </h1>
                     
-                    <!-- 手机端精简文案 (直接打痛点，省空间) -->
-                    <p class="mt-1.5 text-xs text-warm-600 leading-snug md:hidden text-justify">
-                        扎根泗泾 <span class="text-warm-900 font-bold">5年</span>，帮 <span class="text-warm-900 font-bold">1200+</span> 沪漂温暖安家。只做泗泾真房源，全场 <span class="text-orange-500 font-bold">0中介费</span>，专治各种租房坑！
-                    </p>
+                    <div class="mt-3 text-xs text-warm-600 leading-relaxed md:hidden text-justify space-y-2 bg-warm-50 p-3 rounded-xl border border-warm-100">
+                        <p>扎根泗泾，帮 <span class="text-warm-900 font-bold">1200+</span> 沪漂温暖安家。本站所有房源均<strong class="text-orange-500">真实存在，每天更新</strong>。</p>
+                        <p>看中哪套，直接加微信 <strong class="text-warm-900 font-bold select-all">whwb2024</strong>，发送【房源编号】，我给您发无死角实拍视频，马上安排带看！</p>
+                    </div>
 
-                    <!-- 电脑/平板端完整感人文案 -->
-                    <div class="hidden md:block mt-3 space-y-2">
+                    <div class="hidden md:block mt-4 space-y-3">
                         <p class="text-base text-warm-600 leading-relaxed text-justify">
-                            扎根泗泾这片土地已经整整 <span class="font-bold text-warm-800 border-b-2 border-accent-300">5 年</span>，我只专注做泗泾及周边 3 公里的房源。这 5 年里，我接待了超过 <span class="font-bold text-warm-800">3000 位</span>在这座城市打拼的“沪漂”青年，帮助 <span class="font-bold text-warm-800">1200 多人</span>顺利安家。
+                            扎根泗泾这片土地，我只专注做泗泾及周边 3 公里的房源。深知异乡打拼的不易，我坚持所有房源 <strong class="text-orange-500 bg-orange-50 px-1 rounded">100% 真实报价，绝不用假图骗你看房</strong>。
                         </p>
-                        <p class="text-base text-warm-600 leading-relaxed text-justify">
-                            深知异乡打拼的不易，我坚持所有房源 <strong class="text-orange-500 bg-orange-50 px-1 rounded">100% 真实报价、全场免中介费</strong>。我不只是在帮你租一间房，更是希望能为你在这座繁华都市里，提供一个可以卸下疲惫的、温暖的栖息地。
+                        <p class="text-base text-warm-600 leading-relaxed text-justify bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            💡 **看房指南**：本站房源每天实时更新。看中任何一套，请直接添加专属微信 <strong class="text-xl text-accent-700 select-all font-bold mx-1">whwb2024</strong>，将房源列表中的【专属编号】发给我，我会在1分钟内为您提供详细门牌号及高清实拍视频。
                         </p>
                     </div>
 
-                    <!-- 信任标签 -->
-                    <div class="mt-2 md:mt-4 flex flex-wrap gap-1.5 md:gap-3">
-                        <span class="inline-flex items-center px-1.5 py-0.5 md:px-3 md:py-1.5 rounded-md md:rounded-lg bg-orange-50 border border-orange-100 text-[10px] md:text-sm font-bold text-orange-600">0中介费</span>
-                        <span class="inline-flex items-center px-1.5 py-0.5 md:px-3 md:py-1.5 rounded-md md:rounded-lg bg-warm-50 border border-warm-200 text-[10px] md:text-sm font-medium text-warm-700">真实视频</span>
+                    <div class="mt-3 md:mt-4 flex flex-wrap gap-1.5 md:gap-3 justify-center md:justify-start">
+                        <span class="inline-flex items-center px-1.5 py-0.5 md:px-3 md:py-1.5 rounded-md md:rounded-lg bg-orange-50 border border-orange-100 text-[10px] md:text-sm font-bold text-orange-600">每日更新</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 md:px-3 md:py-1.5 rounded-md md:rounded-lg bg-blue-50 border border-blue-200 text-[10px] md:text-sm font-medium text-blue-700">真实底价</span>
                         <span class="inline-flex items-center px-1.5 py-0.5 md:px-3 md:py-1.5 rounded-md md:rounded-lg bg-warm-50 border border-warm-200 text-[10px] md:text-sm font-medium text-warm-700">房东直签</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 筛选控制台 (紧凑版) -->
+        <!-- 筛选控制台 -->
         <div class="bg-white/95 p-3 md:p-5 rounded-xl md:rounded-2xl shadow-sm border border-warm-200 mb-6 sticky top-14 md:top-20 z-40 backdrop-blur-xl">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4">
-                
-                <!-- 关键词搜索 (手机端占满整行) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                 <div class="col-span-2 relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-warm-400">🔍</span>
-                    <input type="text" id="filter-search" placeholder="输入小区 (如: 兰馨苑、祥和公寓)..." class="w-full pl-8 pr-3 py-2 md:py-2.5 text-sm md:text-base rounded-lg border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 transition-shadow">
+                    <input type="text" id="filter-search" placeholder="输入小区或编号 (如: SJ-001)..." class="w-full pl-8 pr-3 py-2 md:py-2.5 text-sm md:text-base rounded-lg border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 transition-shadow">
                 </div>
-                
-                <!-- 距离检索 -->
-                <div class="col-span-1">
-                    <select id="filter-distance" class="w-full px-2 md:px-4 py-2 md:py-2.5 text-xs md:text-base rounded-lg border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none cursor-pointer">
-                        <option value="all">📍 距离</option>
-                        <option value="<500m">步行核心 (< 500m)</option>
-                        <option value="500m-1km">电车通勤 (500m-1km)</option>
-                        <option value="1km-2km">公交接驳 (1km-2km)</option>
-                        <option value=">2km">远距大居 (> 2km)</option>
-                    </select>
-                </div>
-
-                <!-- 户型检索 -->
                 <div class="col-span-1">
                     <select id="filter-type" class="w-full px-2 md:px-4 py-2 md:py-2.5 text-xs md:text-base rounded-lg border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none cursor-pointer">
                         <option value="all">🏠 户型</option>
@@ -130,24 +106,20 @@
                         <option value="合租次卧">合租单间/次卧</option>
                     </select>
                 </div>
-
-                <!-- 租金检索 (手机端占满整行，或者调整网格) -->
-                <div class="col-span-2 md:col-span-1">
+                <div class="col-span-1">
                     <select id="filter-price" class="w-full px-2 md:px-4 py-2 md:py-2.5 text-xs md:text-base rounded-lg border border-warm-300 focus:outline-none focus:ring-2 focus:ring-accent-500 bg-warm-50 text-warm-900 appearance-none cursor-pointer">
                         <option value="all">💰 租金预算</option>
-                        <option value="0-1500">¥1500 以下 (单间首选)</option>
-                        <option value="1500-2500">¥1500 - ¥2500 (一室户)</option>
-                        <option value="2500-3500">¥2500 - ¥3500 (整租特惠)</option>
+                        <option value="0-1500">¥1500 以下</option>
+                        <option value="1500-2500">¥1500 - ¥2500</option>
+                        <option value="2500-3500">¥2500 - ¥3500</option>
                         <option value="3500-99999">¥3500 以上</option>
                     </select>
                 </div>
-
             </div>
             
-            <!-- 重置按钮与统计 -->
             <div class="mt-3 pt-3 border-t border-warm-100 flex justify-between items-center">
                 <div class="text-[10px] md:text-sm text-warm-500">
-                    库内总计 <span id="total-count" class="font-bold text-warm-900">10,000</span> 套，符合 <span id="results-count" class="font-bold text-accent-600">0</span> 套
+                    当前真实上架 <span id="results-count" class="font-bold text-accent-600">0</span> 套好房
                 </div>
                 <button id="btn-reset" class="text-[10px] md:text-sm font-medium text-warm-500 hover:text-warm-800 transition-colors flex items-center gap-1">
                     <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -160,166 +132,779 @@
         <div id="listings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             <!-- 房源卡片将在这里注入 -->
         </div>
-        
-        <!-- 防卡顿/引流提示 -->
-        <div id="load-more-hint" class="hidden mt-8 md:mt-10 p-5 md:p-8 bg-gradient-to-r from-accent-50 to-warm-50 border border-accent-100 rounded-2xl md:rounded-3xl text-center shadow-sm">
-            <div class="text-2xl md:text-3xl mb-2">🎁</div>
-            <h3 class="text-lg md:text-xl font-bold text-warm-900 mb-2">已为您优先展示匹配度最高的 60 套优质房源</h3>
-            <p class="text-sm md:text-base text-warm-600 mb-4 md:mb-6 max-w-2xl mx-auto">为了保证浏览体验，系统已折叠其余数千套高性价比房源。添加主理人微信，告诉我您的需求，免费获取完整房源清单及实拍视频！</p>
-            <div class="inline-block bg-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl border border-warm-200 shadow-sm">
-                <span class="text-xs md:text-sm text-warm-500 mr-1 md:mr-2">专属管家微信：</span>
-                <span class="text-xl md:text-2xl font-bold text-accent-700 select-all tracking-wider">17502100451</span>
-            </div>
-        </div>
 
         <!-- 无结果空状态 -->
         <div id="empty-state" class="hidden py-16 md:py-20 text-center bg-white rounded-2xl md:rounded-3xl border border-warm-200 border-dashed">
             <div class="text-5xl md:text-6xl mb-4 text-warm-300">🕵️</div>
-            <h3 class="text-lg md:text-xl font-medium text-warm-900">抱歉，暂未找到完全符合的房源</h3>
-            <p class="text-sm md:text-base text-warm-500 mt-2 px-4">泗泾好房流转很快，您可以放宽筛选条件，或者直接加我微信帮您留意。</p>
+            <h3 class="text-lg md:text-xl font-medium text-warm-900">抱歉，没找到完全符合的房源</h3>
+            <p class="text-sm md:text-base text-warm-500 mt-2 px-4">泗泾好房流转很快，你可以加我微信，告诉我需求，我帮你在内部系统找。</p>
         </div>
 
     </main>
 
     <!-- 联系看房 Modal -->
-    <div id="contact-modal" class="fixed inset-0 bg-warm-900/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden text-center transform transition-all">
-            <div class="p-6 md:p-8">
-                <div class="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-300 to-orange-400 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border-2 border-white">
-                    🥸
+    <div id="contact-modal" class="fixed inset-0 bg-warm-900/60 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-md overflow-hidden text-left transform transition-all flex flex-col max-h-[90vh]">
+            
+            <!-- 房源基本信息 -->
+            <div class="p-5 md:p-7 border-b border-warm-100 bg-warm-50 relative">
+                <button onclick="closeContactModal()" class="absolute top-4 right-4 text-warm-400 hover:text-warm-700 text-2xl">&times;</button>
+                <div class="flex items-center justify-between mb-3">
+                    <span id="modal-id" class="bg-warm-200 text-warm-800 text-[10px] md:text-xs px-2 py-1 rounded font-mono tracking-wider font-bold">编号加载中</span>
+                    <span id="modal-price" class="text-orange-500 font-bold text-xl md:text-2xl">¥0/月</span>
                 </div>
-                <h3 class="text-xl md:text-2xl font-bold text-warm-900 mb-2">联系主理人看房</h3>
-                <p class="text-warm-500 mb-5 text-xs md:text-sm">好房不等人！请添加我的微信，为您提供此套房的详细门牌号、楼层以及真实查勘视频。</p>
+                <h3 id="modal-title" class="text-lg font-bold text-warm-900 leading-snug mb-3">加载中...</h3>
+                <div class="flex flex-col gap-1.5">
+                    <p class="text-warm-600 text-sm flex items-center gap-1.5">
+                        <span class="text-warm-400">📍</span> 
+                        <span class="font-medium text-warm-800">小区：</span>
+                        <span id="modal-community">--</span>
+                    </p>
+                    <p class="text-warm-600 text-sm flex items-center gap-1.5">
+                        <span class="text-warm-400">🏠</span> 
+                        <span class="font-medium text-warm-800">户型：</span>
+                        <span id="modal-type">--</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 微信引导区 -->
+            <div class="p-6 md:p-8 bg-white text-center">
+                <p class="text-warm-700 mb-5 text-[13px] md:text-sm font-medium text-justify leading-relaxed">
+                    为了保护原房东隐私，此房源的<strong class="text-accent-600">门牌号和高清实拍视频</strong>仅限私发。请添加下方主理人微信，并发送本套房源的编号，即可快速了解详情！
+                </p>
                 
-                <div class="bg-warm-50 border border-warm-200 rounded-xl md:rounded-2xl p-4 md:p-5 mb-5">
-                    <p class="text-[10px] md:text-xs text-warm-500 uppercase tracking-wider font-bold mb-1.5">长按复制微信 / 搜索添加</p>
-                    <p class="text-2xl md:text-3xl font-bold text-accent-700 select-all tracking-wider">17502100451</p>
-                    <div class="mt-2.5 inline-block bg-orange-100 text-orange-600 text-[10px] md:text-xs px-2 py-1 rounded font-medium">
-                        承诺免收任何中介费
+                <div class="bg-blue-50 border border-blue-100 rounded-xl md:rounded-2xl p-4 md:p-5 mb-5 relative overflow-hidden">
+                    <p class="text-[10px] md:text-xs text-blue-500 uppercase tracking-wider font-bold mb-1.5">主理人微信 / 长按复制添加</p>
+                    <p class="text-2xl md:text-3xl font-bold text-blue-700 select-all tracking-wider">whwb2024</p>
+                    <div class="mt-2.5 flex justify-center gap-2">
+                        <span class="inline-block bg-green-100 text-green-700 text-[10px] md:text-xs px-2 py-1 rounded font-medium">请发送编号: <span id="modal-id-copy" class="font-bold">--</span></span>
                     </div>
                 </div>
 
                 <button onclick="closeContactModal()" class="w-full bg-warm-900 text-white font-medium py-3 md:py-3.5 rounded-xl hover:bg-warm-800 transition-colors shadow-md text-sm md:text-base">
-                    我知道了，去加微信
+                    已复制微信号，去添加
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 纯前端 10000条 数据生成引擎 -->
     <script>
-        let allListings = []; 
+        // 统一占位图
+        const fallbackImage = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%23f3f2ef%22%20width%3D%22600%22%20height%3D%22400%22%2F%3E%3Ctext%20fill%3D%22%23b8b1a6%22%20font-family%3D%22sans-serif%22%20font-size%3D%2220%22%20dy%3D%2210.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E5%AE%9E%E6%8B%8D%E5%9B%BE%E7%89%87%E8%AF%B7%E5%8A%A0%E5%BE%AE%E4%BF%A1%E8%8E%B7%E5%8F%96%3C%2Ftext%3E%3C%2Fsvg%3E";
+
+        // =========================================================================
+        // 🚨 你的真实房源数据库 🚨
+        // 包含刚刚深度清洗出来的 40+ 套真实泗泾房源！
+        // =========================================================================
+        const realListings = [
+            {
+                id: "SJ-001",
+                title: "独卫单间高性价比",
+                community: "祥和公寓",
+                price: 1100,
+                type: "合租次卧",
+                distance: ">2km",
+                tags: ["独立卫浴", "随时看房", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-002",
+                title: "原始厨卫带独立洗衣机",
+                community: "祥和公寓",
+                price: 2080,
+                type: "一室户",
+                distance: ">2km",
+                tags: ["原始厨房", "独立洗衣机", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-003",
+                title: "朝南独厨独卫带院子",
+                community: "祥和公寓",
+                price: 1700,
+                type: "一室户",
+                distance: ">2km",
+                tags: ["朝南带院", "独厨独卫", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-004",
+                title: "朝南带院带独卫独厨",
+                community: "祥和公寓",
+                price: 1700,
+                type: "一室户",
+                distance: ">2km",
+                tags: ["朝南带院", "独厨独卫", "性价比高"],
+                image: null
+            },
+            {
+                id: "SJ-005",
+                title: "朝北独厨独卫",
+                community: "祥和公寓",
+                price: 1520,
+                type: "一室户",
+                distance: ">2km",
+                tags: ["朝北户型", "独厨独卫", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-006",
+                title: "朝北独厨独卫",
+                community: "祥和公寓",
+                price: 1600,
+                type: "一室户",
+                distance: ">2km",
+                tags: ["独厨独卫", "随时入住", "价格可谈"],
+                image: null
+            },
+            {
+                id: "SJ-007",
+                title: "精装两房一厅带院子",
+                community: "新凯家园二期",
+                price: 3850,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["一楼带院", "精装全配", "可办居住证"],
+                image: null
+            },
+            {
+                id: "SJ-008",
+                title: "豪装一房可改两房",
+                community: "泗泾新苑",
+                price: 4080,
+                type: "整租",
+                distance: "500m-1km",
+                tags: ["豪华装修", "空间超大", "可办居住证"],
+                image: null
+            },
+            {
+                id: "SJ-009",
+                title: "阁楼精装一室一厅",
+                community: "润江花苑",
+                price: 2000,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["独立空间", "精装修", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-010",
+                title: "南次卧带阳台",
+                community: "润江花苑",
+                price: 1900,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立阳台", "采光极佳", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-011",
+                title: "小北次带独卫",
+                community: "润江花苑",
+                price: 1300,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立卫浴", "高性价比", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-012",
+                title: "超北次卧高性价比",
+                community: "润江花苑",
+                price: 1250,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["价格实惠", "随时看房", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-013",
+                title: "朝南主卧随时看房",
+                community: "润江花苑",
+                price: 1300,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["朝南采光", "随时看房", "精装修"],
+                image: null
+            },
+            {
+                id: "SJ-014",
+                title: "燃气做饭A套一室户",
+                community: "润江花苑",
+                price: 2150,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["燃气做饭", "独立空间", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-015",
+                title: "朝南主卧阳台独卫",
+                community: "润江花苑",
+                price: 1800,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["独立阳台", "独立卫浴", "采光极佳"],
+                image: null
+            },
+            {
+                id: "SJ-016",
+                title: "北次卧随时入住",
+                community: "海康苑",
+                price: 1000,
+                type: "合租次卧",
+                distance: ">2km",
+                tags: ["高性价比", "随时看房", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-017",
+                title: "北次卧合用卫生间",
+                community: "海康苑",
+                price: 1100,
+                type: "合租次卧",
+                distance: ">2km",
+                tags: ["采光好", "随时入住", "两户合用"],
+                image: null
+            },
+            {
+                id: "SJ-018",
+                title: "北次带飘窗燃气厨房",
+                community: "同润山河小城",
+                price: 1200,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["带飘窗", "燃气厨房", "公区宽敞"],
+                image: null
+            },
+            {
+                id: "SJ-019",
+                title: "北次独卫独厨燃气做饭",
+                community: "同润山河小城",
+                price: 1700,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "燃气做饭", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-020",
+                title: "北次卧外独卫独厨",
+                community: "兰馨苑",
+                price: 1550,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨外卫", "独立空间", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-021",
+                title: "北厅独卫独厨",
+                community: "兰馨苑",
+                price: 1600,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "宽敞明亮", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-022",
+                title: "精装北次带独立卫生间",
+                community: "江川一村",
+                price: 1680,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立卫浴", "精装修", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-023",
+                title: "北次精装独厨独卫",
+                community: "江川一村",
+                price: 1500,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "精装修", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-024",
+                title: "北次独立阳台燃气",
+                community: "江川一村",
+                price: 2200,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立阳台", "燃气厨房", "精装修"],
+                image: null
+            },
+            {
+                id: "SJ-025",
+                title: "朝南一楼带大院子",
+                community: "江川一村",
+                price: 2400,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独家院落", "燃气烧饭", "储藏室"],
+                image: null
+            },
+            {
+                id: "SJ-026",
+                title: "独厨独卫燃气厨房",
+                community: "江川一村",
+                price: 1650,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["燃气厨房", "燃气热水器", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-027",
+                title: "朝南精装智能家居",
+                community: "江川二村",
+                price: 2000,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["智能家居", "奶油风", "采光极好"],
+                image: null
+            },
+            {
+                id: "SJ-028",
+                title: "南次独厨独卫带院子",
+                community: "江川二村",
+                price: 2200,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独家院落", "独厨独卫", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-029",
+                title: "小一室户独厨独卫",
+                community: "江川二村",
+                price: 1650,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "设施全配", "价格可谈"],
+                image: null
+            },
+            {
+                id: "SJ-030",
+                title: "朝北独卫合租",
+                community: "江川二村",
+                price: 1800,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立卫浴", "采光良好", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-031",
+                title: "朝南主卧采光好",
+                community: "江川二村",
+                price: 1350,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["朝南采光", "随时入住", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-032",
+                title: "北次带飘窗独厨独卫",
+                community: "中京苑",
+                price: 1700,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["带飘窗", "实木地板", "独厨独卫"],
+                image: null
+            },
+            {
+                id: "SJ-033",
+                title: "北次精装独厨独卫",
+                community: "中京苑",
+                price: 1380,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["精装修", "独厨独卫", "性价比高"],
+                image: null
+            },
+            {
+                id: "SJ-034",
+                title: "原始朝南主卧飘窗独卫",
+                community: "中京苑",
+                price: 2000,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["原始主卧", "独立卫浴", "押一付一"],
+                image: null
+            },
+            {
+                id: "SJ-035",
+                title: "南2精装公用厨房",
+                community: "绿波景园",
+                price: 1380,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["精装修", "合用卫生间", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-036",
+                title: "北3精装独立卫生间",
+                community: "绿波景园",
+                price: 1580,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["独立卫生间", "燃气厨房", "精装修"],
+                image: null
+            },
+            {
+                id: "SJ-037",
+                title: "超大厅卧带阳台",
+                community: "绿波景园",
+                price: 2100,
+                type: "合租主卧",
+                distance: "1km-2km",
+                tags: ["28平大空间", "独立阳台", "独立卫浴"],
+                image: null
+            },
+            {
+                id: "SJ-038",
+                title: "精装楼上一室户",
+                community: "三湘四季花城",
+                price: 2700,
+                type: "一室户",
+                distance: "<500m",
+                tags: ["精装修", "随时看房", "地铁口"],
+                image: null
+            },
+            {
+                id: "SJ-039",
+                title: "全新装修次卧双飘窗",
+                community: "三湘四季花城",
+                price: 1500,
+                type: "合租次卧",
+                distance: "<500m",
+                tags: ["首次出租", "双飘窗", "距地铁近"],
+                image: null
+            },
+            {
+                id: "SJ-040",
+                title: "北燃气合租次卧",
+                community: "三湘四季花城",
+                price: 1500,
+                type: "合租次卧",
+                distance: "<500m",
+                tags: ["燃气做饭", "随时入住", "高性价比"],
+                image: null
+            },
+            {
+                id: "SJ-041",
+                title: "厅卧大空间A01",
+                community: "三湘四季花城",
+                price: 2200,
+                type: "合租主卧",
+                distance: "<500m",
+                tags: ["厅卧大空间", "即将空关", "地铁上盖"],
+                image: null
+            },
+            {
+                id: "SJ-042",
+                title: "厅卧一室户带阳台",
+                community: "三湘四季花城",
+                price: 2280,
+                type: "一室户",
+                distance: "<500m",
+                tags: ["带独立阳台", "独立空间", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-043",
+                title: "独立一室一厅整租",
+                community: "绿地云天坊",
+                price: 3488,
+                type: "整租",
+                distance: "<500m",
+                tags: ["独门独户", "核心商圈", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-044",
+                title: "独立厨卫精装一室户",
+                community: "绿地云天坊",
+                price: 2780,
+                type: "一室户",
+                distance: "<500m",
+                tags: ["独立厨卫", "可短租", "地铁上盖"],
+                image: null
+            },
+            {
+                id: "SJ-045",
+                title: "主卧带飘窗免押金",
+                community: "金地玺华村",
+                price: 1700,
+                type: "合租主卧",
+                distance: "500m-1km",
+                tags: ["免押金", "带飘窗", "品牌小区"],
+                image: null
+            },
+            {
+                id: "SJ-046",
+                title: "南卧带飘窗免押金",
+                community: "金地玺华村",
+                price: 1500,
+                type: "合租次卧",
+                distance: "500m-1km",
+                tags: ["免押金", "采光好", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-047",
+                title: "厅卧带阳台免押金",
+                community: "金地玺华村",
+                price: 1800,
+                type: "合租主卧",
+                distance: "500m-1km",
+                tags: ["独立阳台", "宽敞明亮", "品牌小区"],
+                image: null
+            },
+            {
+                id: "SJ-048",
+                title: "厅卧带阳台免押金",
+                community: "金地玺华村",
+                price: 1800,
+                type: "合租主卧",
+                distance: "500m-1km",
+                tags: ["高层视野", "独立阳台", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-049",
+                title: "厅卧带阳台免押金",
+                community: "金地玺华村",
+                price: 1800,
+                type: "合租主卧",
+                distance: "500m-1km",
+                tags: ["高层采光", "独立阳台", "精装全配"],
+                image: null
+            },
+            {
+                id: "SJ-050",
+                title: "厅卧带阳台女生合租",
+                community: "金地玺华村",
+                price: 1800,
+                type: "合租主卧",
+                distance: "500m-1km",
+                tags: ["仅限女生", "独立阳台", "高端社区"],
+                image: null
+            },
+            {
+                id: "SJ-051",
+                title: "独立一室户燃气厨房",
+                community: "泗泾新苑",
+                price: 1800,
+                type: "一室户",
+                distance: "500m-1km",
+                tags: ["燃气厨房", "独立洗衣机", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-052",
+                title: "原始北卧女生合租",
+                community: "泗泾新苑",
+                price: 1700,
+                type: "合租次卧",
+                distance: "500m-1km",
+                tags: ["带飘窗", "仅限女生", "距地铁近"],
+                image: null
+            },
+            {
+                id: "SJ-053",
+                title: "独立厨卫带大阳台",
+                community: "泗泾新苑",
+                price: 2100,
+                type: "一室户",
+                distance: "500m-1km",
+                tags: ["独立厨卫", "大阳台", "免押金"],
+                image: null
+            },
+            {
+                id: "SJ-054",
+                title: "精装2房1厅电梯房",
+                community: "新凯一期",
+                price: 4100,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["电梯房", "精装全配", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-055",
+                title: "精装两房随时入住",
+                community: "丹桂苑",
+                price: 4100,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["精装全配", "热门小区", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-056",
+                title: "精装一房一厅带空调",
+                community: "丹桂苑",
+                price: 3800,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["客厅空调", "精装全配", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-057",
+                title: "精装两室一厅带空调",
+                community: "紫薇茗庭",
+                price: 3500,
+                type: "整租",
+                distance: ">2km",
+                tags: ["客厅空调", "拎包入住", "随时看房"],
+                image: null
+            },
+            {
+                id: "SJ-058",
+                title: "豪装一房一厅淋浴房",
+                community: "紫薇茗庭",
+                price: 3100,
+                type: "整租",
+                distance: ">2km",
+                tags: ["燃气热水器", "客厅地砖", "豪华装修"],
+                image: null
+            },
+            {
+                id: "SJ-059",
+                title: "精装两房高性价比",
+                community: "银杏苑",
+                price: 3400,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["随时看房", "精装全配", "热门小区"],
+                image: null
+            },
+            {
+                id: "SJ-060",
+                title: "精装南主卧独厨卫",
+                community: "紫荆苑",
+                price: 1800,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "随时入住", "精装全配"],
+                image: null
+            },
+            {
+                id: "SJ-061",
+                title: "豪装大二房一厅全配",
+                community: "紫荆苑",
+                price: 3800,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["客厅空调", "纱窗全配", "停车方便"],
+                image: null
+            },
+            {
+                id: "SJ-062",
+                title: "一室户主卧精神包网",
+                community: "百合苑",
+                price: 1600,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["包网", "精装全配", "近商业"],
+                image: null
+            },
+            {
+                id: "SJ-063",
+                title: "南次卧带飘窗",
+                community: "百合苑",
+                price: 1200,
+                type: "合租次卧",
+                distance: "1km-2km",
+                tags: ["带飘窗", "随时看房", "拎包入住"],
+                image: null
+            },
+            {
+                id: "SJ-064",
+                title: "精装一房两厅原始户型",
+                community: "古楼新苑",
+                price: 3800,
+                type: "整租",
+                distance: "1km-2km",
+                tags: ["客厅地砖", "原始户型", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-065",
+                title: "精装独立一室户燃气",
+                community: "古楼新苑",
+                price: 2300,
+                type: "一室户",
+                distance: "1km-2km",
+                tags: ["独厨独卫", "燃气做饭", "精装全配"],
+                image: null
+            },
+            {
+                id: "SJ-066",
+                title: "豪装两房一厅拎包入住",
+                community: "德悦苑",
+                price: 3900,
+                type: "整租",
+                distance: ">2km",
+                tags: ["燃气热水器", "客厅地砖", "随时入住"],
+                image: null
+            },
+            {
+                id: "SJ-067",
+                title: "精装三房一厅大地砖",
+                community: "登云苑",
+                price: 4300,
+                type: "整租",
+                distance: ">2km",
+                tags: ["客厅大地砖", "燃气热水器", "空间大"],
+                image: null
+            }
+        ];
+        // =========================================================================
 
         // 绑定 Modal
-        window.openContactModal = () => document.getElementById('contact-modal').classList.remove('hidden');
-        window.closeContactModal = () => document.getElementById('contact-modal').classList.add('hidden');
-
-        // ==== 核心：引流数据生成器 ====
-        function generateTrafficData() {
-            // 用户指定的热门霸屏小区
-            const hotCommunities = [
-                { name: "兰馨苑", dist: "1km-2km" },
-                { name: "丁香苑", dist: "1km-2km" },
-                { name: "尚樱苑", dist: "1km-2km" },
-                { name: "祥和公寓", dist: "<500m" },
-                { name: "建发玖珑湾", dist: "1km-2km" },
-                { name: "金地二期", dist: "1km-2km" },
-                { name: "祥泽苑", dist: "1km-2km" }
-            ];
-
-            // 其他常规小区池
-            const regularCommunities = [
-                { name: "保利翡丽公馆", dist: "<500m" }, { name: "绿地云天坊", dist: "<500m" }, { name: "泗泾新苑", dist: "<500m" },
-                { name: "润和苑", dist: "500m-1km" }, { name: "金地玺华村", dist: "500m-1km" }, { name: "招商时代潮派", dist: "500m-1km" }, 
-                { name: "泗泾颐景园", dist: "500m-1km" }, { name: "褐石苑", dist: "1km-2km" }, { name: "鹭景苑", dist: "1km-2km" }, 
-                { name: "繁华里", dist: "1km-2km" }, { name: "紫竹苑", dist: "1km-2km" }, { name: "桂花苑", dist: "1km-2km" }, 
-                { name: "同润山河小城", dist: "1km-2km" }, { name: "玉兰苑", dist: "1km-2km" }, { name: "清泉警苑", dist: "1km-2km" }, 
-                { name: "塘和家园·德悦苑", dist: ">2km" }, { name: "新城上坤樾山", dist: ">2km" }, { name: "紫薇茗庭", dist: ">2km" }
-            ];
-
-            // 引流价格策略
-            const roomTypes = [
-                { type: "三室一厅", displayType: "整租", min: 3300, max: 3500 },
-                { type: "两室一厅", displayType: "整租", min: 2800, max: 3000 },
-                { type: "一室一厅", displayType: "整租", min: 2400, max: 2500 },
-                { type: "一室户", displayType: "一室户", min: 1500, max: 2000 },
-                { type: "合租主卧", displayType: "合租主卧", min: 1200, max: 1500 },
-                { type: "合租次卧", displayType: "合租次卧", min: 800, max: 1100 }
-            ];
-
-            const adjectives = ["主理人优选", "急租", "精选推荐", "全新精装", "超高性价比", "随时拎包", "朝南带阳台", "特价秒杀", "打工人首选", "免中介费"];
-            const tagPool = ["近地铁", "精装修", "押一付一", "朝南", "独立卫浴", "带阳台", "电梯房", "免物业费", "民水民电", "全套家电", "随时看房"];
-
-            const generatedData = [];
-
-            // 生成函数抽离
-            function createListing(i, communityPool, isHot = false) {
-                const comm = communityPool[Math.floor(Math.random() * communityPool.length)];
-                // 热门小区多推荐整租和一室户
-                const roomInfo = isHot 
-                    ? roomTypes[Math.floor(Math.random() * 4)] // 偏向好户型
-                    : roomTypes[Math.floor(Math.random() * roomTypes.length)];
-                
-                const buildingNum = Math.floor(Math.random() * 80) + 1;
-                const unitNum = Math.floor(Math.random() * 5) + 1;
-                const price = Math.floor(Math.random() * (roomInfo.max - roomInfo.min + 1)) + roomInfo.min;
-                
-                const adj = isHot ? "必看好房 " : adjectives[Math.floor(Math.random() * adjectives.length)] + " ";
-                const title = `${adj}${roomInfo.type} ${comm.name} ${buildingNum}号楼${unitNum}单元`;
-
-                const tags = [];
-                const shuffledTags = tagPool.sort(() => 0.5 - Math.random());
-                tags.push(shuffledTags[0], shuffledTags[1]);
-                if (Math.random() > 0.5) tags.push(shuffledTags[2]);
-                if (isHot) tags.unshift("主推房源"); // 热门小区专属标签
-
-                return {
-                    id: i,
-                    title: title,
-                    community: comm.name,
-                    price: price,
-                    type: roomInfo.displayType,
-                    distance: comm.dist,
-                    tags: tags
-                };
+        window.openContactModal = (id) => {
+            const item = realListings.find(l => l.id == id);
+            if(item) {
+                document.getElementById('modal-title').textContent = item.title;
+                document.getElementById('modal-price').textContent = `¥${item.price}/月`;
+                document.getElementById('modal-community').textContent = item.community;
+                document.getElementById('modal-type').textContent = item.type;
+                document.getElementById('modal-id').textContent = `编号: ${item.id}`;
+                document.getElementById('modal-id-copy').textContent = item.id;
             }
+            document.getElementById('contact-modal').classList.remove('hidden');
+            document.getElementById('contact-modal').classList.add('flex');
+        };
+        window.closeContactModal = () => {
+            document.getElementById('contact-modal').classList.add('hidden');
+            document.getElementById('contact-modal').classList.remove('flex');
+        };
 
-            // 1. 先生成 100 套热门小区，保证它们绝对霸屏排在最前面
-            for (let i = 0; i < 100; i++) {
-                generatedData.push(createListing(i, hotCommunities, true));
-            }
-
-            // 2. 再生成剩余的 9900 套常规小区
-            for (let i = 100; i < 10000; i++) {
-                // 混合所有小区，但常规小区占绝大多数
-                const mixedPool = Math.random() > 0.8 ? hotCommunities : regularCommunities;
-                generatedData.push(createListing(i, mixedPool, false));
-            }
-
-            return generatedData;
-        }
-
-        // 初始化加载数据
+        // 初始化
         function initData() {
-            allListings = generateTrafficData();
-            
-            const badge = document.getElementById('db-status');
-            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> 10000套真实库已同步`;
-            badge.className = "hidden sm:flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full shadow-sm";
-            
-            applyFilters();
+            renderGrid(realListings);
         }
 
         // 筛选逻辑
         function applyFilters() {
             const searchVal = document.getElementById('filter-search').value.toLowerCase();
-            const distanceVal = document.getElementById('filter-distance').value;
             const typeVal = document.getElementById('filter-type').value;
             const priceVal = document.getElementById('filter-price').value;
 
-            const filtered = allListings.filter(item => {
-                const matchSearch = item.community.toLowerCase().includes(searchVal) || item.title.toLowerCase().includes(searchVal);
-                const matchDistance = distanceVal === 'all' || item.distance === distanceVal;
+            const filtered = realListings.filter(item => {
+                const matchSearch = item.community.toLowerCase().includes(searchVal) || 
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.id.toLowerCase().includes(searchVal);
                 const matchType = typeVal === 'all' || item.type === typeVal;
                 
                 let matchPrice = true;
@@ -328,7 +913,7 @@
                     matchPrice = item.price >= min && item.price <= max;
                 }
 
-                return matchSearch && matchDistance && matchType && matchPrice;
+                return matchSearch && matchType && matchPrice;
             });
 
             renderGrid(filtered);
@@ -338,15 +923,12 @@
         function renderGrid(data) {
             const grid = document.getElementById('listings-grid');
             const emptyState = document.getElementById('empty-state');
-            const loadMoreHint = document.getElementById('load-more-hint');
             
             document.getElementById('results-count').textContent = data.length;
-
             grid.innerHTML = '';
 
             if (data.length === 0) {
                 grid.classList.add('hidden');
-                loadMoreHint.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
             }
@@ -354,33 +936,31 @@
             grid.classList.remove('hidden');
             emptyState.classList.add('hidden');
 
-            const displayData = data.slice(0, 60);
-            
-            if (data.length > 60) {
-                loadMoreHint.classList.remove('hidden');
-            } else {
-                loadMoreHint.classList.add('hidden');
-            }
-
-            displayData.forEach(item => {
-                let distColor = 'bg-warm-100 text-warm-600';
-                if(item.distance === '<500m') distColor = 'bg-red-50 text-red-600 border border-red-100';
-                if(item.distance === '500m-1km') distColor = 'bg-orange-50 text-orange-600 border border-orange-100';
-
-                // 如果包含"主推房源"标签，给它一个特殊的红色高亮
+            data.forEach(item => {
                 const tagsHtml = (item.tags || []).map(t => {
-                    if (t === "主推房源") return `<span class="px-2 py-0.5 md:px-2.5 md:py-1 bg-red-50 text-red-600 rounded text-[10px] md:text-xs border border-red-100 font-bold">${t}🔥</span>`;
                     return `<span class="px-2 py-0.5 md:px-2.5 md:py-1 bg-warm-50 text-warm-600 rounded text-[10px] md:text-xs border border-warm-100">${t}</span>`;
                 }).join('');
 
+                const imageSectionHtml = item.image 
+                    ? `<img src="${item.image}" onerror="this.src='${fallbackImage}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`
+                    : `<img src="${fallbackImage}" class="w-full h-full object-cover" loading="lazy">`;
+
                 const cardHtml = `
-                    <div class="bg-white rounded-xl md:rounded-2xl border border-warm-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full group">
-                        <div class="p-4 md:p-6 flex-1 flex flex-col">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="text-[10px] md:text-xs font-bold px-2 py-0.5 md:px-2.5 md:py-1 rounded-md ${distColor}">${item.distance}</span>
-                                <span class="text-[10px] md:text-xs font-bold px-2 py-0.5 md:px-2.5 md:py-1 rounded-md bg-accent-50 text-accent-700 border border-accent-100">${item.type}</span>
+                    <div class="bg-white rounded-xl md:rounded-2xl border border-warm-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full group cursor-pointer" onclick="openContactModal('${item.id}')">
+                        
+                        <!-- 照片展示区 -->
+                        <div class="relative h-40 sm:h-48 w-full overflow-hidden shrink-0">
+                            <div class="absolute top-2.5 left-2.5 flex gap-1.5 z-10">
+                                <span class="text-[10px] md:text-xs font-bold px-2 py-1 rounded bg-warm-900/90 text-white shadow-sm backdrop-blur font-mono">${item.id}</span>
                             </div>
-                            
+                            <div class="absolute top-2.5 right-2.5 z-10">
+                                <span class="text-[10px] md:text-xs font-bold px-2 py-1 rounded bg-accent-600/90 text-white shadow-sm backdrop-blur">${item.type}</span>
+                            </div>
+                            ${imageSectionHtml}
+                        </div>
+
+                        <!-- 房源信息区 -->
+                        <div class="p-4 md:p-5 flex-1 flex flex-col">
                             <h3 class="font-bold text-base md:text-lg text-warm-900 leading-snug mb-2 line-clamp-2 group-hover:text-accent-600 transition-colors">${item.title}</h3>
                             
                             <div class="flex items-center text-warm-600 text-xs md:text-sm mb-3 font-medium bg-warm-50/50 w-fit px-1.5 py-0.5 md:px-2 md:py-1 rounded">
@@ -395,8 +975,8 @@
                                 <div class="text-orange-500 font-bold leading-none">
                                     <span class="text-xs">¥</span><span class="text-2xl md:text-3xl">${item.price}</span><span class="text-[10px] md:text-xs text-warm-400 font-normal ml-0.5">/月</span>
                                 </div>
-                                <button onclick="openContactModal()" class="px-3 py-1.5 md:px-5 md:py-2.5 bg-warm-900 hover:bg-warm-800 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95">
-                                    立即咨询
+                                <button class="px-4 py-1.5 md:px-5 md:py-2 bg-warm-900 hover:bg-warm-800 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-all shadow-md group-hover:shadow-lg flex items-center gap-1">
+                                    马上看房
                                 </button>
                             </div>
                         </div>
@@ -406,21 +986,19 @@
             });
         }
 
-        // 绑定筛选事件
-        const filterIds = ['filter-search', 'filter-distance', 'filter-type', 'filter-price'];
+        // 绑定事件
+        const filterIds = ['filter-search', 'filter-type', 'filter-price'];
         filterIds.forEach(id => {
             document.getElementById(id).addEventListener(id === 'filter-search' ? 'input' : 'change', applyFilters);
         });
 
         document.getElementById('btn-reset').addEventListener('click', () => {
             document.getElementById('filter-search').value = '';
-            document.getElementById('filter-distance').value = 'all';
             document.getElementById('filter-type').value = 'all';
             document.getElementById('filter-price').value = 'all';
             applyFilters();
         });
 
-        // 页面加载完毕后生成 10000 条数据
         document.addEventListener('DOMContentLoaded', initData);
 
     </script>
