@@ -190,16 +190,30 @@
     </div>
 
     <script>
-        // 统一占位图
+        // 高级精美网图库 (用于兜底无图房源，增加引流吸引力)
+        const photoPool = [
+            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80",
+            "https://images.unsplash.com/photo-1502672260266-1c1de242457a?w=600&q=80",
+            "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80",
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80",
+            "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&q=80",
+            "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80",
+            "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&q=80",
+            "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80",
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&q=80",
+            "https://images.unsplash.com/photo-1598928506311-c55dedbfc181?w=600&q=80"
+        ];
+
+        // 统一占位图 (防止网图加载失败)
         const fallbackImage = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20fill%3D%22%23f3f2ef%22%20width%3D%22600%22%20height%3D%22400%22%2F%3E%3Ctext%20fill%3D%22%23b8b1a6%22%20font-family%3D%22sans-serif%22%20font-size%3D%2220%22%20dy%3D%2210.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E5%AE%9E%E6%8B%8D%E5%9B%BE%E7%89%87%E8%AF%B7%E5%8A%A0%E5%BE%AE%E4%BF%A1%E8%8E%B7%E5%8F%96%3C%2Ftext%3E%3C%2Fsvg%3E";
 
         // =========================================================================
         // 🚨 你的真实房源数据库 🚨
-        // 包含刚刚深度清洗出来的 40+ 套真实泗泾房源！
+        // 每次把 AI 生成的数据贴在这里，注意：不再需要你手动填写 ID (编号)！
+        // 系统会自动按顺序赋予 SJ-001，SJ-002...
         // =========================================================================
-        const realListings = [
+        const rawListings = [
             {
-                id: "SJ-001",
                 title: "独卫单间高性价比",
                 community: "祥和公寓",
                 price: 1100,
@@ -209,7 +223,6 @@
                 image: null
             },
             {
-                id: "SJ-002",
                 title: "原始厨卫带独立洗衣机",
                 community: "祥和公寓",
                 price: 2080,
@@ -219,7 +232,6 @@
                 image: null
             },
             {
-                id: "SJ-003",
                 title: "朝南独厨独卫带院子",
                 community: "祥和公寓",
                 price: 1700,
@@ -229,7 +241,6 @@
                 image: null
             },
             {
-                id: "SJ-004",
                 title: "朝南带院带独卫独厨",
                 community: "祥和公寓",
                 price: 1700,
@@ -239,7 +250,6 @@
                 image: null
             },
             {
-                id: "SJ-005",
                 title: "朝北独厨独卫",
                 community: "祥和公寓",
                 price: 1520,
@@ -249,7 +259,6 @@
                 image: null
             },
             {
-                id: "SJ-006",
                 title: "朝北独厨独卫",
                 community: "祥和公寓",
                 price: 1600,
@@ -259,7 +268,6 @@
                 image: null
             },
             {
-                id: "SJ-007",
                 title: "精装两房一厅带院子",
                 community: "新凯家园二期",
                 price: 3850,
@@ -269,7 +277,6 @@
                 image: null
             },
             {
-                id: "SJ-008",
                 title: "豪装一房可改两房",
                 community: "泗泾新苑",
                 price: 4080,
@@ -279,7 +286,6 @@
                 image: null
             },
             {
-                id: "SJ-009",
                 title: "阁楼精装一室一厅",
                 community: "润江花苑",
                 price: 2000,
@@ -289,7 +295,6 @@
                 image: null
             },
             {
-                id: "SJ-010",
                 title: "南次卧带阳台",
                 community: "润江花苑",
                 price: 1900,
@@ -299,7 +304,6 @@
                 image: null
             },
             {
-                id: "SJ-011",
                 title: "小北次带独卫",
                 community: "润江花苑",
                 price: 1300,
@@ -309,7 +313,6 @@
                 image: null
             },
             {
-                id: "SJ-012",
                 title: "超北次卧高性价比",
                 community: "润江花苑",
                 price: 1250,
@@ -319,7 +322,6 @@
                 image: null
             },
             {
-                id: "SJ-013",
                 title: "朝南主卧随时看房",
                 community: "润江花苑",
                 price: 1300,
@@ -329,7 +331,6 @@
                 image: null
             },
             {
-                id: "SJ-014",
                 title: "燃气做饭A套一室户",
                 community: "润江花苑",
                 price: 2150,
@@ -339,7 +340,6 @@
                 image: null
             },
             {
-                id: "SJ-015",
                 title: "朝南主卧阳台独卫",
                 community: "润江花苑",
                 price: 1800,
@@ -349,7 +349,6 @@
                 image: null
             },
             {
-                id: "SJ-016",
                 title: "北次卧随时入住",
                 community: "海康苑",
                 price: 1000,
@@ -359,7 +358,6 @@
                 image: null
             },
             {
-                id: "SJ-017",
                 title: "北次卧合用卫生间",
                 community: "海康苑",
                 price: 1100,
@@ -369,7 +367,6 @@
                 image: null
             },
             {
-                id: "SJ-018",
                 title: "北次带飘窗燃气厨房",
                 community: "同润山河小城",
                 price: 1200,
@@ -379,7 +376,6 @@
                 image: null
             },
             {
-                id: "SJ-019",
                 title: "北次独卫独厨燃气做饭",
                 community: "同润山河小城",
                 price: 1700,
@@ -389,7 +385,6 @@
                 image: null
             },
             {
-                id: "SJ-020",
                 title: "北次卧外独卫独厨",
                 community: "兰馨苑",
                 price: 1550,
@@ -399,7 +394,6 @@
                 image: null
             },
             {
-                id: "SJ-021",
                 title: "北厅独卫独厨",
                 community: "兰馨苑",
                 price: 1600,
@@ -409,7 +403,6 @@
                 image: null
             },
             {
-                id: "SJ-022",
                 title: "精装北次带独立卫生间",
                 community: "江川一村",
                 price: 1680,
@@ -419,7 +412,6 @@
                 image: null
             },
             {
-                id: "SJ-023",
                 title: "北次精装独厨独卫",
                 community: "江川一村",
                 price: 1500,
@@ -429,7 +421,6 @@
                 image: null
             },
             {
-                id: "SJ-024",
                 title: "北次独立阳台燃气",
                 community: "江川一村",
                 price: 2200,
@@ -439,7 +430,6 @@
                 image: null
             },
             {
-                id: "SJ-025",
                 title: "朝南一楼带大院子",
                 community: "江川一村",
                 price: 2400,
@@ -449,7 +439,6 @@
                 image: null
             },
             {
-                id: "SJ-026",
                 title: "独厨独卫燃气厨房",
                 community: "江川一村",
                 price: 1650,
@@ -459,7 +448,6 @@
                 image: null
             },
             {
-                id: "SJ-027",
                 title: "朝南精装智能家居",
                 community: "江川二村",
                 price: 2000,
@@ -469,7 +457,6 @@
                 image: null
             },
             {
-                id: "SJ-028",
                 title: "南次独厨独卫带院子",
                 community: "江川二村",
                 price: 2200,
@@ -479,7 +466,6 @@
                 image: null
             },
             {
-                id: "SJ-029",
                 title: "小一室户独厨独卫",
                 community: "江川二村",
                 price: 1650,
@@ -489,7 +475,6 @@
                 image: null
             },
             {
-                id: "SJ-030",
                 title: "朝北独卫合租",
                 community: "江川二村",
                 price: 1800,
@@ -499,7 +484,6 @@
                 image: null
             },
             {
-                id: "SJ-031",
                 title: "朝南主卧采光好",
                 community: "江川二村",
                 price: 1350,
@@ -509,7 +493,6 @@
                 image: null
             },
             {
-                id: "SJ-032",
                 title: "北次带飘窗独厨独卫",
                 community: "中京苑",
                 price: 1700,
@@ -519,7 +502,6 @@
                 image: null
             },
             {
-                id: "SJ-033",
                 title: "北次精装独厨独卫",
                 community: "中京苑",
                 price: 1380,
@@ -529,7 +511,6 @@
                 image: null
             },
             {
-                id: "SJ-034",
                 title: "原始朝南主卧飘窗独卫",
                 community: "中京苑",
                 price: 2000,
@@ -539,7 +520,6 @@
                 image: null
             },
             {
-                id: "SJ-035",
                 title: "南2精装公用厨房",
                 community: "绿波景园",
                 price: 1380,
@@ -549,7 +529,6 @@
                 image: null
             },
             {
-                id: "SJ-036",
                 title: "北3精装独立卫生间",
                 community: "绿波景园",
                 price: 1580,
@@ -559,7 +538,6 @@
                 image: null
             },
             {
-                id: "SJ-037",
                 title: "超大厅卧带阳台",
                 community: "绿波景园",
                 price: 2100,
@@ -569,7 +547,6 @@
                 image: null
             },
             {
-                id: "SJ-038",
                 title: "精装楼上一室户",
                 community: "三湘四季花城",
                 price: 2700,
@@ -579,7 +556,6 @@
                 image: null
             },
             {
-                id: "SJ-039",
                 title: "全新装修次卧双飘窗",
                 community: "三湘四季花城",
                 price: 1500,
@@ -589,7 +565,6 @@
                 image: null
             },
             {
-                id: "SJ-040",
                 title: "北燃气合租次卧",
                 community: "三湘四季花城",
                 price: 1500,
@@ -599,7 +574,6 @@
                 image: null
             },
             {
-                id: "SJ-041",
                 title: "厅卧大空间A01",
                 community: "三湘四季花城",
                 price: 2200,
@@ -609,7 +583,6 @@
                 image: null
             },
             {
-                id: "SJ-042",
                 title: "厅卧一室户带阳台",
                 community: "三湘四季花城",
                 price: 2280,
@@ -619,7 +592,6 @@
                 image: null
             },
             {
-                id: "SJ-043",
                 title: "独立一室一厅整租",
                 community: "绿地云天坊",
                 price: 3488,
@@ -629,7 +601,6 @@
                 image: null
             },
             {
-                id: "SJ-044",
                 title: "独立厨卫精装一室户",
                 community: "绿地云天坊",
                 price: 2780,
@@ -639,7 +610,6 @@
                 image: null
             },
             {
-                id: "SJ-045",
                 title: "主卧带飘窗免押金",
                 community: "金地玺华村",
                 price: 1700,
@@ -649,7 +619,6 @@
                 image: null
             },
             {
-                id: "SJ-046",
                 title: "南卧带飘窗免押金",
                 community: "金地玺华村",
                 price: 1500,
@@ -659,7 +628,6 @@
                 image: null
             },
             {
-                id: "SJ-047",
                 title: "厅卧带阳台免押金",
                 community: "金地玺华村",
                 price: 1800,
@@ -669,7 +637,6 @@
                 image: null
             },
             {
-                id: "SJ-048",
                 title: "厅卧带阳台免押金",
                 community: "金地玺华村",
                 price: 1800,
@@ -679,7 +646,6 @@
                 image: null
             },
             {
-                id: "SJ-049",
                 title: "厅卧带阳台免押金",
                 community: "金地玺华村",
                 price: 1800,
@@ -689,7 +655,6 @@
                 image: null
             },
             {
-                id: "SJ-050",
                 title: "厅卧带阳台女生合租",
                 community: "金地玺华村",
                 price: 1800,
@@ -699,7 +664,6 @@
                 image: null
             },
             {
-                id: "SJ-051",
                 title: "独立一室户燃气厨房",
                 community: "泗泾新苑",
                 price: 1800,
@@ -709,7 +673,6 @@
                 image: null
             },
             {
-                id: "SJ-052",
                 title: "原始北卧女生合租",
                 community: "泗泾新苑",
                 price: 1700,
@@ -719,7 +682,6 @@
                 image: null
             },
             {
-                id: "SJ-053",
                 title: "独立厨卫带大阳台",
                 community: "泗泾新苑",
                 price: 2100,
@@ -729,7 +691,6 @@
                 image: null
             },
             {
-                id: "SJ-054",
                 title: "精装2房1厅电梯房",
                 community: "新凯一期",
                 price: 4100,
@@ -739,7 +700,6 @@
                 image: null
             },
             {
-                id: "SJ-055",
                 title: "精装两房随时入住",
                 community: "丹桂苑",
                 price: 4100,
@@ -749,7 +709,6 @@
                 image: null
             },
             {
-                id: "SJ-056",
                 title: "精装一房一厅带空调",
                 community: "丹桂苑",
                 price: 3800,
@@ -759,7 +718,6 @@
                 image: null
             },
             {
-                id: "SJ-057",
                 title: "精装两室一厅带空调",
                 community: "紫薇茗庭",
                 price: 3500,
@@ -769,7 +727,6 @@
                 image: null
             },
             {
-                id: "SJ-058",
                 title: "豪装一房一厅淋浴房",
                 community: "紫薇茗庭",
                 price: 3100,
@@ -779,7 +736,6 @@
                 image: null
             },
             {
-                id: "SJ-059",
                 title: "精装两房高性价比",
                 community: "银杏苑",
                 price: 3400,
@@ -789,7 +745,6 @@
                 image: null
             },
             {
-                id: "SJ-060",
                 title: "精装南主卧独厨卫",
                 community: "紫荆苑",
                 price: 1800,
@@ -799,7 +754,6 @@
                 image: null
             },
             {
-                id: "SJ-061",
                 title: "豪装大二房一厅全配",
                 community: "紫荆苑",
                 price: 3800,
@@ -809,7 +763,6 @@
                 image: null
             },
             {
-                id: "SJ-062",
                 title: "一室户主卧精神包网",
                 community: "百合苑",
                 price: 1600,
@@ -819,7 +772,6 @@
                 image: null
             },
             {
-                id: "SJ-063",
                 title: "南次卧带飘窗",
                 community: "百合苑",
                 price: 1200,
@@ -829,7 +781,6 @@
                 image: null
             },
             {
-                id: "SJ-064",
                 title: "精装一房两厅原始户型",
                 community: "古楼新苑",
                 price: 3800,
@@ -839,7 +790,6 @@
                 image: null
             },
             {
-                id: "SJ-065",
                 title: "精装独立一室户燃气",
                 community: "古楼新苑",
                 price: 2300,
@@ -849,7 +799,6 @@
                 image: null
             },
             {
-                id: "SJ-066",
                 title: "豪装两房一厅拎包入住",
                 community: "德悦苑",
                 price: 3900,
@@ -859,7 +808,6 @@
                 image: null
             },
             {
-                id: "SJ-067",
                 title: "精装三房一厅大地砖",
                 community: "登云苑",
                 price: 4300,
@@ -869,6 +817,21 @@
                 image: null
             }
         ];
+
+        // === 核心逻辑：自动生成编号并赋予随机网图 ===
+        const realListings = rawListings.map((item, index) => {
+            // 自动编号：从 SJ-001 开始
+            const idNumber = String(index + 1).padStart(3, '0');
+            item.id = `SJ-${idNumber}`;
+            
+            // 如果原本没有图片，随机从高质量素材库里挑一张
+            if (!item.image) {
+                // 使用固定种子(基于index)保证每次刷新同一套房子图片不变，增加真实感
+                const photoIndex = index % photoPool.length; 
+                item.image = photoPool[photoIndex];
+            }
+            return item;
+        });
         // =========================================================================
 
         // 绑定 Modal
