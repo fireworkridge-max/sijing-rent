@@ -204,22 +204,30 @@
     </div>
 
     <script>
-        // 彻底修复的 URI 编码占位图，百分百防碎图
-        const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="#f3f2ef"/><path d="M250,150 Q300,100 350,150 T450,150 L450,250 Q400,300 350,250 T250,250 Z" fill="#e8e5e1"/><circle cx="350" cy="180" r="20" fill="#d5d0c8"/><text x="50%" y="55%" font-family="sans-serif" font-size="20" font-weight="bold" fill="#9c9284" text-anchor="middle">实拍视频及照片</text><text x="50%" y="65%" font-family="sans-serif" font-size="16" fill="#b8b1a6" text-anchor="middle">请添加微信获取详细资料</text></svg>`;
-        const fallbackImage = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(fallbackSvg);
+        // 核心技术升级：Base64 纯净 SVG 占位图，确保 100% 绝不碎图
+        const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="600" height="400" fill="#f3f2ef"/><path d="M250,150 Q300,100 350,150 T450,150 L450,250 Q400,300 350,250 T250,250 Z" fill="#e8e5e1"/><circle cx="350" cy="180" r="20" fill="#d5d0c8"/><text x="50%" y="50%" font-family="sans-serif" font-size="22" font-weight="bold" fill="#9c9284" text-anchor="middle">实拍视频及照片</text><text x="50%" y="62%" font-family="sans-serif" font-size="16" fill="#b8b1a6" text-anchor="middle">请加微信获取详细资料</text></svg>`;
+        const fallbackImage = "data:image/svg+xml;base64," + window.btoa(unescape(encodeURIComponent(fallbackSvg)));
 
-        // 高级精美网图库 (保证链接稳定)
+        // 全局防碎图拦截器
+        window.handleImageError = function(img) {
+            if (img.src !== fallbackImage) {
+                img.onerror = null; // 防止无限死循环
+                img.src = fallbackImage;
+            }
+        };
+
+        // 极其稳定的 Pexels CDN 室内实拍网图库，无防盗链限制
         const photoPool = [
-            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1502672260266-1c1de242457a?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&auto=format&fit=crop&q=80"
+            "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
+            "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
+            "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
+            "https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
+            "https://images.pexels.com/photos/279719/pexels-photo-279719.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop",
+            "https://images.pexels.com/photos/1454806/pexels-photo-1454806.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
         ];
 
         // =========================================================================
-        // 🚨 你的真实房源数据库 🚨
+        // 🚨 你的真实房源数据库 (AI 提取后直接粘贴于此) 🚨
         // =========================================================================
         const rawListings = [
             {
@@ -379,7 +387,6 @@
             const idNumber = String(index + 1).padStart(3, '0');
             item.id = `SJ-${idNumber}`;
             
-            // 简单智能判断朝向
             if(item.orientation === "未知") {
                 if(item.title.includes("南") || item.tags.join("").includes("南")) item.orientation = "朝南";
                 else if(item.title.includes("北") || item.tags.join("").includes("北")) item.orientation = "朝北";
@@ -387,11 +394,11 @@
             }
 
             if (!item.image) {
-                // 30%的概率展示精美网图，70%展示占位图
+                // 确保图片加载的稳定性
                 if(index % 3 === 0) {
                     item.image = photoPool[index % photoPool.length];
                 } else {
-                    item.image = fallbackImage; // 安全的SVG链接
+                    item.image = fallbackImage; 
                 }
             }
             return item;
@@ -458,8 +465,8 @@
             data.forEach(item => {
                 const tagsHtml = (item.tags || []).map(t => `<span class="px-2 py-0.5 bg-warm-100/60 text-warm-700 rounded text-[10px] md:text-xs font-medium border border-warm-200/50">${t}</span>`).join('');
 
-                // 安全的图片加载，带有 onerror 兜底处理
-                const imageSectionHtml = `<img src="${item.image}" onerror="this.src='${fallbackImage}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`;
+                // 接入安全防碎图机制
+                const imageSectionHtml = `<img src="${item.image}" onerror="handleImageError(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">`;
 
                 const cardHtml = `
                     <div class="bg-white rounded-2xl border border-warm-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full group cursor-pointer" onclick="openContactModal('${item.id}')">
@@ -477,7 +484,6 @@
                         <div class="p-4 flex-1 flex flex-col">
                             <h3 class="font-bold text-base text-warm-900 leading-snug mb-2.5 line-clamp-2 group-hover:text-accent-600 transition-colors">${item.title}</h3>
                             
-                            <!-- 小区名称优化：更大更醒目 -->
                             <div class="flex items-center text-warm-800 text-sm mb-3 font-bold bg-warm-50 w-fit px-2.5 py-1 rounded-md border border-warm-100">
                                 <span class="mr-1 text-xs opacity-70">📍</span> ${item.community}
                             </div>
